@@ -15,7 +15,7 @@ import { Icon } from 'leaflet';
 //import NavBarSideBar from "@/components/NavBarSideBar";
 
 import accueil from "@/pages/accueil";
-
+import createStation from "@/pages/createStation";
 
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
@@ -33,7 +33,8 @@ Vue.config.productionTip = false
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    {path: '/', component: accueil}
+    {path: '/', component: accueil},
+    {path: '/stations', component: createStation}
   ]
 
 });
