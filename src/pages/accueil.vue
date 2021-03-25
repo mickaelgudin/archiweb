@@ -199,12 +199,13 @@ export default {
     },
     handleSearchJourneys() {
       //trigger function of journeysResults component to retrieve data
-      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival);
+      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep);
     },
 
     allowedStep: m => m % 10 === 0,
     getNow(){
       let today = new Date();
+
       return today.getHours()+":"+today.getMinutes();
     },
 
