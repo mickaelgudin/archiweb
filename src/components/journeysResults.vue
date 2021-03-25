@@ -38,51 +38,65 @@ import axios from 'axios'
       model: 1,
     }),
     methods: {
-        getJourneys(idStationFrom, idStationTo, timeStep){
+        /**
+        * add 0 at the beginning for month or day
+        * @param  {Number} idStationFrom id of selected departure station
+        * @param  {Number} idStationTo id of selected arrival station
+        * @param  {String} timeStep selected time from form
+        * @param  {Number} fromTimeType index of filtering criteria for selected hour, (0 : departure at, 1: arrival at )
+        */
+        getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType){
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
 
             if(idStationFrom && idStationTo) {
                 axios
                 .get('https://projet-web-trains.herokuapp.com/journeys?id-from='+idStationFrom+'&id-to='+idStationTo)
-                .then(response => (this.filterJourneys(response.data, fromTime) ) )
+                .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType) ) )
             }
         },
 
-        filterJourneys(journeysReceived, fromTime) {
-          console.log('fromtime : ', fromTime);
-          console.log('journeysReceived : ', journeysReceived);
+      /**
+       * Filter journeys returned by api, to display  only those matching criterias of the form
+       * @param  {Array} journeysReceived journeys returned by api
+       * @param  {Number} fromTime selected time from search form, ex : 800 (for 8:00)
+       * @param  {Number} fromTimeType index of filtering criteria for selected hour, (0 : departure at, 1: arrival at )
+       */
+        filterJourneys(journeysReceived, fromTime, fromTimeType) {
           let journeysFiltered = [];
-          journeysReceived.forEach(function(journey){
-            let dateDepart =  journey.departureDate;
-            var split = dateDepart.split('T')[1];
+          let today = new Date();
+          // today date with this format : yyyy-mm--dd
+          let todayFormatted = today.getFullYear()+'-'+this.formatElementOfDate(today.getMonth()+1)+'-'+this.formatElementOfDate(today.getDate());
+
+          journeysReceived.forEach((journey) => {
+            const dateToCompareWith = (fromTimeType == 0) ? journey.departureDate : journey.arrivalDate;
+            const dateCurrentJourneyFormatted = dateToCompareWith.split('T')[0];
             
-            var dateCurrentJourneyFormatted = dateDepart.split('T')[0];
-            let today = new Date();
-            let year= today.getFullYear();
-            let month = (today.getMonth() < 10) ? '0'+(today.getMonth()+1) : (today.getMonth()+1); 
-            let day = (today.getDate() < 10) ? '0'+today.getDate() : today.getDate() ;
-            let todayFormatted = year+'-'+month+'-'+day;
-
-            console.log('todayFormatted ', todayFormatted);
-            console.log('dateCurrentJourneyFormatted ', dateCurrentJourneyFormatted);
             if(todayFormatted === dateCurrentJourneyFormatted) {
-              split = split.substring(0, split.length - 3);
-              let timeOfDate = Number(split.replaceAll(':', ''));
-
-              console.log('timeOfDate : ', timeOfDate);
-              if(timeOfDate > fromTime) {
+              //get hour from datime and removing seconds 
+              let hourOfJourney = dateToCompareWith.split('T')[1];
+              hourOfJourney = hourOfJourney.substring(0, hourOfJourney.length - 3);
+              
+              //comparing current journey time with selected time from form
+              if(Number(hourOfJourney.replaceAll(':', '')) >= fromTime) {
                 journeysFiltered.push(journey); 
               }
             }
 
           });
 
-
-          console.log('journeysReceived ', journeysFiltered);
           this.journeys = journeysFiltered;
-
-        }
+        },
+        
+        /**
+        * add 0 at the beginning for month or day
+        * @param  {Number} elementOfDate element of date(month or day)
+        * @return {String}      formatted element of date
+        */
+        formatElementOfDate(elementOfDate) {
+          return (elementOfDate < 10) ? '0'+elementOfDate : elementOfDate; 
+        } 
+      
     }
   }
 </script>

@@ -89,6 +89,7 @@
                   v-model="selectedItem"
                   color="#60378c"
               >
+              
                 <v-list-item
                     v-for="(item, i) in items"
                     :key="i"
@@ -199,7 +200,7 @@ export default {
     },
     handleSearchJourneys() {
       //trigger function of journeysResults component to retrieve data
-      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep);
+      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem);
     },
 
     allowedStep: m => m % 10 === 0,
