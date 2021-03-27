@@ -1,5 +1,5 @@
 <template>
-    <div id="recherche" v-if="journeys.length > 0" style="margin-top:2%; margin-left:2%; margin-right:2%;">
+    <div id="recherche" v-if="hasSearch" style="margin-top:2%; margin-left:2%; margin-right:2%;">
       <v-row justify="center">
         <v-col cols="12" sm="12" md="10" lg="6" xl="6" >
 
@@ -21,6 +21,12 @@
                 </h5>
               </v-list-item-content>
             </v-list-item>
+
+             <v-list-item v-if="hasSearch && journeys.length == 0"> 
+                <v-list-item-content>
+                  Aucun trajet trouvé pour votre recherche
+                </v-list-item-content>
+             </v-list-item>
           </v-list-item-group>
           </v-card>
         </v-col>
@@ -36,6 +42,7 @@ import axios from 'axios'
       to: -1,
       journeys: [],
       model: 1,
+      hasSearch : false
     }),
     methods: {
         /**
@@ -45,14 +52,15 @@ import axios from 'axios'
         * @param  {String} timeStep selected time from form
         * @param  {Number} fromTimeType index of filtering criteria for selected hour, (0 : departure at, 1: arrival at )
         */
-        getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType){
+        getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType, selectedDate){
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
+            this.hasSearch = true;
 
             if(idStationFrom && idStationTo) {
                 axios
                 .get('https://projet-web-trains.herokuapp.com/journeys?id-from='+idStationFrom+'&id-to='+idStationTo)
-                .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType) ) )
+                .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
             }
         },
 
@@ -62,17 +70,14 @@ import axios from 'axios'
        * @param  {Number} fromTime selected time from search form, ex : 800 (for 8:00)
        * @param  {Number} fromTimeType index of filtering criteria for selected hour, (0 : departure at, 1: arrival at )
        */
-        filterJourneys(journeysReceived, fromTime, fromTimeType) {
+        filterJourneys(journeysReceived, fromTime, fromTimeType, selectedDate) {
           let journeysFiltered = [];
-          let today = new Date();
-          // today date with this format : yyyy-mm--dd
-          let todayFormatted = today.getFullYear()+'-'+this.formatElementOfDate(today.getMonth()+1)+'-'+this.formatElementOfDate(today.getDate());
 
           journeysReceived.forEach((journey) => {
             const dateToCompareWith = (fromTimeType == 0) ? journey.departureDate : journey.arrivalDate;
             const dateCurrentJourneyFormatted = dateToCompareWith.split('T')[0];
             
-            if(todayFormatted === dateCurrentJourneyFormatted) {
+            if(selectedDate === dateCurrentJourneyFormatted) {
               //get hour from datime and removing seconds 
               let hourOfJourney = dateToCompareWith.split('T')[1];
               hourOfJourney = hourOfJourney.substring(0, hourOfJourney.length - 3);

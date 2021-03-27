@@ -107,6 +107,10 @@
           </v-col>
 
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
+              <v-date-picker v-model="selectedDate"></v-date-picker>
+          </v-col>
+
+          <v-col cols="6" sm="6" md="4" lg="3" xl="3">
             <v-time-picker
                 v-model="timeStep"
                 :allowed-minutes="allowedStep"
@@ -191,6 +195,7 @@ export default {
       isMounted : false,
       idStationDepart: Number,
       idStationArrival: Number,
+      selectedDate : ''
     }
   },
   methods: {
@@ -200,7 +205,8 @@ export default {
     },
     handleSearchJourneys() {
       //trigger function of journeysResults component to retrieve data
-      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem);
+      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
+      this.hasSearch = true;
     },
 
     allowedStep: m => m % 10 === 0,
