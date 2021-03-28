@@ -43,9 +43,14 @@
             <v-card-title  style="margin-top:9%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c">Gare de Départ</v-card-title>
           </v-col>
         </v-row>
+
+        
       <v-select
-          :items="info"
+          :items="allStations"
+          item-text="name"
+          item-value="trainStationId"
           label="Sélectionnez la Gare de Départ"
+          v-model="idStationDepart"
           solo
       ></v-select>
 
@@ -59,9 +64,12 @@
         </v-row>
 
       <v-select
-          :items= "info"
+          :items= "allStations"
+          item-text="name"
+          item-value="trainStationId"
           label="Sélectionnez la Gare d'Arrivée"
           solo
+          v-model="idStationArrival"
           color="#60378c"
       ></v-select>
         </v-col>
@@ -81,6 +89,7 @@
                   v-model="selectedItem"
                   color="#60378c"
               >
+              
                 <v-list-item
                     v-for="(item, i) in items"
                     :key="i"
@@ -95,6 +104,10 @@
               </v-list-item-group>
             </v-list>
           </v-card>
+          </v-col>
+
+          <v-col cols="6" sm="6" md="4" lg="3" xl="3">
+              <v-date-picker v-model="selectedDate"></v-date-picker>
           </v-col>
 
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
@@ -118,7 +131,7 @@
           color="#60378c"
           dark
           style="height:50px;width:50%; margin-bottom:3%; margin-top: 2%; text-decoration: none;"
-          @click="reponse=true" :href='"#recherche"'
+          @click="handleSearchJourneys" :href='"#recherche"'
       >
 
         <div style="color:white; font-size:18px;">Rechercher</div>
@@ -128,41 +141,8 @@
 
       </v-row>
 
-
-      <div id="recherche" v-if="reponse" style="margin-top:2%; margin-left:2%; margin-right:2%;">
-      <v-row justify="center">
-        <v-col cols="12" sm="12" md="10" lg="6" xl="6" >
-
-          <h1 style="margin-bottom: 2%">Trajets en lien avec votre recherche</h1>
-          <v-card style="border: 2px solid #60378c; margin-bottom:10%">
-          <v-list-item-group
-              v-model="selectedItem"
-              color="#60378c"
-          >
-            <v-list-item
-                v-for="(item, i) in info"
-                :key="i"
-            >
-              <v-list-item-icon style="margin-bottom:10%">
-                <v-icon class="iconify" data-icon="mdi:arrow-right" style="color:#60378c; height:70px"></v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <h5 style="font-size:15px">Trajet de : {{item}} à {{item}}
-                  <br>
-                  <br>
-                Prix total : 30€
-                <br>
-                <br>
-                Nombre de correspondance(s) : 0
-                </h5>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-          </v-card>
-        </v-col>
-      </v-row>
-      </div>
-
+      <!-- journeys results --> 
+      <journeys-results ref="journeys"></journeys-results>
 
     </v-card>
     </div>
@@ -173,26 +153,29 @@
 //import L from 'leaflet';
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
-import axios from 'axios'
+import axios from 'axios';
+import journeysResults from '../components/journeysResults.vue';
 //import Map from "@/components/Map";
 
 export default {
+  components: { journeysResults },
   name: "accueil",
   component:{
     LMap,
     LTileLayer,
-    LMarker,
+    LMarker
   },
 
   mounted () {
+    this.isMounted = true;
     axios
         .get('https://projet-web-trains.herokuapp.com/train-stations')
-        .then(response => (this.info = this.recupData(response.data)))
+        .then(response => (this.recupData(response.data)))
   },
 
   data () {
     return{
-
+      
       center: L.latLng(48.8588377,2.2770202),
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -201,7 +184,7 @@ export default {
 
       timeStep: this.getNow(),
 
-      info:[],
+      allStations:[],
 
       selectedItem: 1,
       items: [
@@ -209,6 +192,10 @@ export default {
         { text: 'Arrivée', icon: 'mdi-clock-time-eight' }
       ],
       reponse:false,
+      isMounted : false,
+      idStationDepart: Number,
+      idStationArrival: Number,
+      selectedDate : ''
     }
   },
   methods: {
@@ -216,14 +203,22 @@ export default {
     redirect(to){
       this.$router.push(to)
     },
+    handleSearchJourneys() {
+      //trigger function of journeysResults component to retrieve data
+      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
+      this.hasSearch = true;
+    },
 
     allowedStep: m => m % 10 === 0,
     getNow(){
       let today = new Date();
+
       return today.getHours()+":"+today.getMinutes();
     },
 
     recupData(tbObjet){
+      this.allStations = tbObjet;
+
       let tbName=[];
       for(let i in tbObjet){
         tbName.push(tbObjet[i].name);
