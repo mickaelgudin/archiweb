@@ -55,16 +55,22 @@ export default {
     methods: {
         editStation: function(item) {
             //form has values of the selected station
-            this.newStation = item;
+            this.newStation.trainStationId = item.trainStationId;
+            this.newStation.name = item.name;
+            this.newStation.longitude = item.longitude;
+            this.newStation.latitude = item.latitude;
             this.typeForm = 'update';
-            this.titleCard = 'Modifier la station '+this.newStation.name;
+            this.titleCard = 'Modifier la station '+ this.newStation.name;
         },
         updateStation: function(){
+            console.log("test update");
             console.log("station modified : "+JSON.stringify(this.newStation) );
+            this.updateStations(this.newStation.trainStationId);
         },
         deleteStation: function(stationToDelete) {
+            console.log("test delete");
             console.log("item to delete : "+JSON.stringify(stationToDelete) );
-            //implement this function
+            this.deleteStations(stationToDelete.trainStationId);
         },
         createStation: function() {
             let errorAlert = this.checkFields();
@@ -112,8 +118,51 @@ export default {
                             'Content-Type' : 'application/json' 
                         }
                     }
+            )
+            .then((response) => {
+                this.stationsList.push(response.data);
+            });
 
-            );
+        },
+        deleteStations: function(id) {
+            axios.delete(
+                    'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
+                    {
+                        headers: { 
+                            'Content-Type' : 'application/json' 
+                        }
+                    }
+            )
+            .then((response) => {
+                console.log(response.data);
+                this.stationsList = this.stationsList.filter(station => {
+                    return station.trainStationId != id;
+                })   
+            });
+        },
+
+        updateStations: function(id) {
+            axios.put(
+                    'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
+                    JSON.stringify(this.newStation),
+                    {
+                        headers: { 
+                            'Content-Type' : 'application/json' 
+                        }
+                    }
+            )
+            .then((response) => {
+                let stations = [];
+                this.stationsList.forEach(station => {
+                    if (station.trainStationId == id) {
+                        stations.push(response.data);
+                    }
+                    else {
+                        stations.push(station);
+                    }
+                });
+                this.stationsList = stations;   
+            }); 
         }
     }
 }
