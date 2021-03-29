@@ -16,6 +16,7 @@
     "vue-apexcharts": "^1.6.0",
     "vue-axios": "^3.2.4",
     "vue-country-flag": "^2.0.3",
+    "vue-i18n": "^8.24.2",
     "vue-router": "^3.4.9",
     "vue2-leaflet": "^2.6.0",
     "vuetify": "^2.2.11",

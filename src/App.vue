@@ -1,14 +1,16 @@
 <template>
   <v-app >
-
+    <locale-changer></locale-changer>
     <router-view></router-view>
   </v-app>
 
 </template>
 
 <script>
+import localeChanger from './components/locale-changer.vue';
 
 export default {
+  components: { localeChanger },
   name: "App",
 
   data : () => ({

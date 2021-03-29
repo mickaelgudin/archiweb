@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
+import VueI18n from 'vue-i18n';
 import VueApexCharts from 'vue-apexcharts';
 import '@/plugins/apexcharts';
 import VueRouter from "vue-router";
@@ -19,6 +20,7 @@ import createStation from "@/pages/createStation";
 
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
+Vue.use(VueI18n)
 
 delete Icon.Default.prototype._getIconUrl;
 Icon.Default.mergeOptions({
@@ -45,10 +47,51 @@ Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 
+//defining text for both language french and english
+const messages = {
+  fr: {
+    createStationTitle : 'Création d\'une nouvelle station',
+    createStation: 'Créer une nouvelle station',
+    modifyStation: 'Modifier la station ',
+    nameOfStation : 'nom de la station',
+    longitude : 'longitude',
+    latitude : 'latitude',
+    errorFormStation : 'Vous devez compléter les champs suivants : ',
+    resetForm: 'Réinitialiser',
+    headersStationCrud : [
+        {text: 'Id', value: 'trainStationId'},
+        {text: 'Nom de la station', value: 'name'},
+        {text: 'Longitude', value: 'longitude'},
+        {text: 'Latitude', value: 'latitude'}
+    ]
+  },
+  en: {
+    createStationTitle : 'Creating a new station',
+    createStation: 'Create a new station',
+    modifyStation: 'Modify the station : ',
+    nameOfStation : 'Name of the station',
+    longitude : 'longitude',
+    latitude : 'latitude',
+    errorFormStation : 'You must complete the following fields : ',
+    resetForm: 'Reset',
+    headersStationCrud : [
+        {text: 'Id', value: 'trainStationId'},
+        {text: 'Name of the station', value: 'name'},
+        {text: 'Longitude', value: 'longitude'},
+        {text: 'Latitude', value: 'latitude'}
+    ]
+  }
+}
 
+// Create VueI18n instance with options
+const i18n = new VueI18n({
+  locale: 'en',
+  messages,
+})
 
 new Vue({
   vuetify,
+  i18n,
   router,
   render: h => h(App)
 }).$mount('#app')

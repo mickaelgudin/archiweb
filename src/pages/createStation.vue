@@ -1,29 +1,34 @@
 <template>
     <div id="main">
         <v-card width="800" elevation="2" outlined shaped tile>
-            <v-card-title>{{titleCard}}</v-card-title>
+            <v-card-title v-if="typeForm == 'create'">{{$t('createStation')}}</v-card-title>
+            <v-card-title v-if="typeForm == 'update'">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
+
             <v-form ref="form" class="mb-4">
                 <v-card style="padding : 1rem; margin: 1rem">
-                    <v-text-field v-model="newStation.name" label="Nom de la station" required></v-text-field>
+                    <v-text-field v-model="newStation.name" :label="$t('nameOfStation')" required></v-text-field>
 
-                    <v-text-field v-model="newStation.longitude" type="number" label="Longitude" required></v-text-field>
-                    <v-text-field v-model="newStation.latitude" type="number" label="Lattitude" required></v-text-field>
+                    <v-text-field v-model="newStation.longitude" type="number" :label="$t('longitude')" required></v-text-field>
+                    <v-text-field v-model="newStation.latitude" type="number" :label="$t('latitude')" required></v-text-field>
                 </v-card>
 
                 <div id="actionMenu" style="padding : 1rem; margin: 1rem">
-                    <v-btn v-if="typeForm == 'create' " color="success" class="mt-4" @click="createStation">Créer la station</v-btn>
-                    <v-btn v-if="typeForm == 'update' " color="success" class="mt-4" @click="updateStation">Modifier la station</v-btn>
+                    <v-btn v-if="typeForm == 'create' " color="success" class="mt-4" @click="createStation">{{ $t('createStation') }}</v-btn>
+                    <v-btn v-if="typeForm == 'update' " color="success" class="mt-4" @click="updateStation">{{ $t('modifyStation') }}</v-btn>
 
-                    <v-btn color="primary" class="mt-4 ml-4" @click="resetForm">Reset</v-btn>    
+                    <v-btn color="primary" class="mt-4 ml-4" @click="resetForm">{{ $t('resetForm') }}</v-btn>    
 
                     <toast ref="toast"></toast>
                 </div>
             </v-form>
         </v-card>
-        <datatable :items="stationsList" :headers="headers" 
+        <datatable :items="stationsList" :headers="$t('headersStationCrud')" 
                 v-on:edit="editStation" v-on:delete="deleteStation"></datatable>
+    
     </div>
 </template>
+
+
 
 <script>
 import axios from 'axios'
@@ -36,16 +41,12 @@ export default {
     data () {
         return{
             newStation : { name: '', longitude: 0.0, latitude: 0.0  },
-            headers : [
-                {text: 'Id', value: 'trainStationId'},
-                {text: 'Nom de la station', value: 'name'},
-                {text: 'Longitute', value: 'longitude'},
-                {text: 'Latitude', value: 'latitude'}
-            ],
             typeForm : 'create',
-            titleCard : 'Créer une nouvelle station',
             stationsList: []
         }
+    },
+    created () {
+        this.titleCard = this.$t('createStationTitle');
     },
     mounted () {
         axios
@@ -53,6 +54,10 @@ export default {
             .then(response => (this.stationsList = response.data))
     },
     methods: {
+        /**
+        * defining a method to edit station in table
+        * @param  {Object} item station to be modify
+        */
         editStation: function(item) {
             //form has values of the selected station
             this.newStation.trainStationId = item.trainStationId;
@@ -60,55 +65,72 @@ export default {
             this.newStation.longitude = item.longitude;
             this.newStation.latitude = item.latitude;
             this.typeForm = 'update';
-            this.titleCard = 'Modifier la station '+ this.newStation.name;
         },
+        /**
+        * handle onclick button update
+        */
         updateStation: function(){
-            console.log("test update");
-            console.log("station modified : "+JSON.stringify(this.newStation) );
-            this.updateStations(this.newStation.trainStationId);
+            this.updateStationById(this.newStation.trainStationId);
         },
+        /**
+        * handle onclick button delete
+        */
         deleteStation: function(stationToDelete) {
-            console.log("test delete");
-            console.log("item to delete : "+JSON.stringify(stationToDelete) );
-            this.deleteStations(stationToDelete.trainStationId);
+            this.deleteStationById(stationToDelete.trainStationId);
         },
+
+        /**
+        * create new station and checking for error
+        */
         createStation: function() {
             let errorAlert = this.checkFields();
             
             //if not error in form we create the new station
-            if(errorAlert === 'La station doit avoir ') {
+            if(errorAlert === this.$t('errorFormStation')) {
                 this.createStations();
             } else {
                 this.$refs.toast.displayToast('error', errorAlert, 6);
             }
         },
+
+        /**
+        * reset form by emptying the fields
+        */
         resetForm: function() {
             this.newStation = { name: '', longitude: 0.0, latitude: 0.0  };
             this.typeForm = 'create';
-            this.titleCard = 'Créer une nouvelle station';
         },
+
+        /**
+        * check fields for error
+        * @return errorMessage
+        */
         checkFields: function() {
-            let errorAlert = 'La station doit avoir ';
+            let errorAlert = this.$t('errorFormStation');
 
             if(!this.newStation.name|| 0 === this.newStation.name.length) {
-                errorAlert += 'un nom';
+                errorAlert += this.$t('nameOfStation');
             }
             if(!this.newStation.longitude) {
-                if(errorAlert.includes('un nom')) {
+                if(errorAlert.includes(this.$t('nameOfStation'))) {
                     errorAlert += ', ';
                 }
-                errorAlert += 'une longitude';
+                errorAlert += this.$t('longitude');
             } 
             if(!this.newStation.latitude) {
-                if(errorAlert.includes('un nom') || errorAlert.includes('une longitude') ) {
+                if(errorAlert.includes(this.$t('nameOfStation')) || errorAlert.includes(this.$t('longitude')) ) {
                     errorAlert += ', ';
                 }
 
-                errorAlert += 'une latitude';
+                errorAlert += this.$t('latitude');
             }
 
             return errorAlert;
         },
+
+        /**
+        * calling api to create new station
+        */
         createStations: function() {
             axios.post(
                     'https://projet-web-trains.herokuapp.com/train-stations', 
@@ -124,7 +146,12 @@ export default {
             });
 
         },
-        deleteStations: function(id) {
+
+        /**
+        * calling api to delete the station with given id
+        * @param id id of the station to delete
+        */
+        deleteStationById: function(id) {
             axios.delete(
                     'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
                     {
@@ -141,7 +168,11 @@ export default {
             });
         },
 
-        updateStations: function(id) {
+        /**
+        * calling api to update station with given
+        * @param id train station id to update
+        */
+        updateStationById: function(id) {
             axios.put(
                     'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
                     JSON.stringify(this.newStation),

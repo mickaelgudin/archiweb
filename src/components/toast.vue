@@ -16,6 +16,12 @@ export default {
         }
     },
     methods : {
+        /**
+        * defining a method that parent can invoke, don't use props here to reduce props in parent component
+        * @param  {String} type kind of toast(error, sucess)
+        * @param {String} message text showed by the toast
+        * @param {String} seconds number of seconds during which we display the toast
+        */
         displayToast : function(type, message, seconds) {
             this.message = message;
             this.typeToast = type;
