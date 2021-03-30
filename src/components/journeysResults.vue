@@ -1,5 +1,6 @@
 <template>
     <div id="recherche" v-if="hasSearch" style="margin-top:2%; margin-left:2%; margin-right:2%;">
+      <toast ref="toastJourneys"></toast>
       <v-row justify="center">
         <v-col cols="12" sm="12" md="10" lg="6" xl="6" >
 
@@ -36,7 +37,9 @@
 
 <script>
 import axios from 'axios'
+import toast from '../components/toast.vue'
   export default { 
+    components: { toast },
     data: () => ({
       from: -1,
       to: -1,
@@ -61,6 +64,11 @@ import axios from 'axios'
                 axios
                 .get('https://projet-web-trains.herokuapp.com/journeys?id-from='+idStationFrom+'&id-to='+idStationTo)
                 .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
+                .catch(err => {
+                    if (err.response.status === 400) {
+                        this.$refs.toastJourneys.displayToast('error', err.response.data.message, 10);
+                    }
+                });
             }
         },
 

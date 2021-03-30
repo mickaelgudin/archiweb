@@ -22,6 +22,8 @@
                 </div>
             </v-form>
         </v-card>
+
+        <toast ref="toastDatatable"></toast>
         <datatable :items="stationsList" :headers="$t('headersStationCrud')" 
                 v-on:edit="editStation" v-on:delete="deleteStation"></datatable>
     
@@ -52,6 +54,7 @@ export default {
         axios
             .get('https://projet-web-trains.herokuapp.com/train-stations')
             .then(response => (this.stationsList = response.data))
+            
     },
     methods: {
         /**
@@ -148,7 +151,7 @@ export default {
         },
 
         /**
-        * calling api to delete the station with given id
+        * calling api to delete the station with given id, custom error is throw by if id don't exist
         * @param id id of the station to delete
         */
         deleteStationById: function(id) {
@@ -165,11 +168,16 @@ export default {
                 this.stationsList = this.stationsList.filter(station => {
                     return station.trainStationId != id;
                 })   
+            }).catch(err => {
+                if (err.response.status === 400) {
+                    this.$refs.toastDatatable.displayToast('error', err.response.data.message, 10);
+                }
             });
+            
         },
 
         /**
-        * calling api to update station with given
+        * calling api to update station with given, there is custom error from api if id don't exist
         * @param id train station id to update
         */
         updateStationById: function(id) {
@@ -193,7 +201,11 @@ export default {
                     }
                 });
                 this.stationsList = stations;   
-            }); 
+            }).catch(err => {
+                if (err.response.status === 400) {
+                    this.$refs.toast.displayToast('error', err.response.data.message, 10);
+                }
+            });
         }
     }
 }
