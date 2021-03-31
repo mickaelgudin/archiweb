@@ -6,7 +6,7 @@ import '@/plugins/apexcharts';
 import VueRouter from "vue-router";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 
@@ -43,7 +43,8 @@ Vue.component('apexchart', VueApexCharts)
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
-
+Vue.component('l-popup', LPopup);
+Vue.component('l-polyline', LPolyline);
 
 
 new Vue({
