@@ -7,7 +7,7 @@ import '@/plugins/apexcharts';
 import VueRouter from "vue-router";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 
@@ -88,6 +88,9 @@ const i18n = new VueI18n({
   locale: 'en',
   messages,
 })
+Vue.component('l-popup', LPopup);
+Vue.component('l-polyline', LPolyline);
+
 
 new Vue({
   vuetify,
