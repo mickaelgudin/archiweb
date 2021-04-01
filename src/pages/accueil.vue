@@ -103,8 +103,10 @@
         </v-btn>
         </v-row>
 
+        
         <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
         <journeys-results ref="journeys"></journeys-results>
+        <journeyTendancy v-if="hasSearch"></journeyTendancy>
 
       </v-card>
     </div>
@@ -117,17 +119,19 @@ import L from 'leaflet';
 import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from 'vue2-leaflet';
 import axios from 'axios';
 import journeysResults from '../components/journeysResults.vue';
+import journeyTendancy from '../components/journeyTendancy.vue';
 //import Map from "@/components/Map";
 
 export default {
-  components: { journeysResults },
   name: "accueil",
-  component:{
+  components:{
     LMap,
     LTileLayer,
     LMarker,
     LPolyline,
     LPopup,
+    journeyTendancy,
+    journeysResults
   },
 
   mounted () {
@@ -155,12 +159,11 @@ export default {
       ],
       idStationDepart: Number,
       idStationArrival: Number,
-      selectedDate : '',
 
       tabInfosGaresLatLng: [],
 
       copyTabInfosGaresLatLng : [],
-
+      hasSearch: false
     }
   },
   methods: {
@@ -172,6 +175,7 @@ export default {
       this.displayPopUpStation();
       //trigger function of journeysResults component to retrieve data
       this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
+      
       this.hasSearch = true;
     },
 
@@ -225,7 +229,13 @@ export default {
 
   },
 
+
+
+
+
 }
+
+
 </script>
 
 <style scoped>
