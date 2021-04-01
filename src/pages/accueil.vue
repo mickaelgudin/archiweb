@@ -134,30 +134,7 @@
 
 
 
- <div id="recherche" v-if="reponse" style="margin-top:2%; margin-left:2%; margin-right:2%;">
-      <v-row justify="center">
-        <v-col cols="12" sm="12" md="10" lg="6" xl="6" >
-
-          <h1 style="margin-bottom: 2%">Tendances des prix sur le trajet sélectionné</h1>
-          <v-card style="border: 2px solid #60378c; margin-bottom:10%">
-          <v-list-item-group
-              color="#60378c"
-          >
-            <v-list-item>
-              <v-list-item-content>
-                <h5 style="font-size:15px">Trajet de {{selectedGareDepart}} à {{selectedGareArrivee}}
-                  <v-list-item-icon style="margin-bottom:5%">
-                    <v-icon class="iconify" data-icon="mdi-arrow-top-right" style="color:#60378c; height:70px"></v-icon>
-                  </v-list-item-icon>
-                </h5>
-              </v-list-item-content>
-            </v-list-item>
-            
-          </v-list-item-group>
-          </v-card>
-        </v-col>
-      </v-row>
-      </div>
+      <journeyTendancy></journeyTendancy>
 
 
       <div id="recherche" v-if="reponse" style="margin-top:2%; margin-left:2%; margin-right:2%;">
@@ -204,15 +181,18 @@
 //import L from 'leaflet';
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import journeyTendancy from '../components/journeyTendancy.vue';
 import axios from 'axios'
 //import Map from "@/components/Map";
 
 export default {
   name: "accueil",
-  component:{
+  components:{
     LMap,
     LTileLayer,
     LMarker,
+    journeyTendancy
+
   },
 
   mounted () {
