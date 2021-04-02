@@ -1,22 +1,18 @@
 <template>
-    <div id="recherche" style="margin-top:2%; margin-left:2%; margin-right:2%;">
-        <v-row justify="center">
-            <v-col cols="12" sm="12" md="10" lg="6" xl="6" >
-                <h1 style="margin-bottom: 2%">Tendances des prix sur le trajet sélectionné</h1>
-                <v-card style="border: 2px solid #60378c; margin-bottom:10%">
-                    <v-list-item-group color="#60378c">
-                        <v-list-item>
-                            <h2>Sur tous les trajets existants entre les gares sélectionnés</h2>
-                            <v-list-item-content>
-                                <v-list-item-icon style="margin-left: 10%;">
-                                    <v-icon :class="'iconify '+classeCss" :data-icon="icon" x-large></v-icon>
-                                </v-list-item-icon>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-card>
-            </v-col>
-        </v-row>
+    <div id="recherche">
+            <h2 style="margin-bottom: 2%">{{$t('journeysTendancyTitle')}}</h2>
+            <v-card style="border: 2px solid #60378c; margin-bottom:10%">
+                <v-list-item-group color="#60378c">
+                    <v-list-item>
+                        <h3>{{$t('journeysTendancySecondTitle')}}</h3>
+                        <v-list-item-content>
+                            <v-list-item-icon style="margin-left: 10%;">
+                                <v-icon :class="'iconify '+classeCss" :data-icon="icon" x-large></v-icon>
+                            </v-list-item-icon>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-card>
     </div>
 </template>
 

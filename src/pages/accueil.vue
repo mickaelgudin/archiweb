@@ -31,7 +31,7 @@
       </v-col>
     </div>
 
-    <div style="margin-left:3%; margin-right:3%; margin-top:6%; margin-bottom:10%;">
+    <div style="margin-left:3%; margin-right:3%; margin-top:2%; margin-bottom:2%;">
       <v-card>
         <div style="margin-left:3%; margin-right:3%;">
           <v-row justify="center">
@@ -103,12 +103,14 @@
         </v-btn>
         </v-row>
 
-        
-        <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
-        <journeys-results ref="journeys"></journeys-results>
-        <journeyTendancy v-if="hasSearch"></journeyTendancy>
+        <v-row justify="center" style="border-top: 1px solid black; padding-top: 2rem; padding-bottom: 2rem">
+            <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
+            <journeys-results style="width: 40%; margin-right: 20px;" ref="journeys"></journeys-results>
+            <journeyTendancy style="width: 40%;" v-if="hasSearch"></journeyTendancy>
+          </v-row>
 
       </v-card>
+      
     </div>
   </div>
 </template>

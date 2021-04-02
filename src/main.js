@@ -63,7 +63,12 @@ const messages = {
         {text: 'Nom de la station', value: 'name'},
         {text: 'Longitude', value: 'longitude'},
         {text: 'Latitude', value: 'latitude'}
-    ]
+    ],
+    journeysResulsHeader: 'Trajets en lien avec votre recherche',
+    journeysResultsLine: 'Ligne',
+    journeysResultsEmpty: 'Aucun trajet trouvé pour votre recherche',
+    journeysTendancyTitle : 'Tendances des prix sur votre trajet', 
+    journeysTendancySecondTitle : 'Sur tous les trajets existants', 
   },
   en: {
     createStationTitle : 'Creating a new station',
@@ -79,7 +84,12 @@ const messages = {
         {text: 'Name of the station', value: 'name'},
         {text: 'Longitude', value: 'longitude'},
         {text: 'Latitude', value: 'latitude'}
-    ]
+    ],
+    journeysResulsHeader: 'Journeys related to your search criteria',
+    journeysResultsLine: 'Line',
+    journeysResultsEmpty: 'No journey matching your criteria was found',
+    journeysTendancyTitle : 'Prices tendancy on your journey', 
+    journeysTendancySecondTitle : 'On all existing journeys', 
   }
 }
 
