@@ -18,13 +18,30 @@
         <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="border: 5px solid white">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
+          <div v-if="hasSearch">
           <l-marker v-for="(item, index) in tabInfosGaresLatLng" ref="marker" :key="index" :lat-lng="item.position"
-              :visible=true :draggable=true @add="openPopup">
+              :visible=true :draggable=true  @add="openPopup">
             <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
               {{item.name}}
             </l-popup>
           </l-marker>
-          <l-polyline v-if="hasSearch" :lat-lngs="displayPolyline()" :color="'blue'"></l-polyline>
+            <l-polyline :lat-lngs="displayPolyline()" :color="'blue'"></l-polyline>
+          </div>
+
+          <div v-if="!hasSearch">
+          <l-marker v-for="(item, index) in copyTabInfosGaresLatLng" @click="displayReachableStations(item)" ref="marker" :key="index" :lat-lng="item.position"
+                    :visible=true :draggable=true  @add="openPopup">
+            <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
+              {{item.name}}
+
+              <div v-if="item.price!=null">
+
+                Prix : {{item.price}} €
+              </div>
+            </l-popup>
+          </l-marker>
+            <l-polyline :lat-lngs="displayPolylineFromClicked()" :color="'blue'"></l-polyline>
+          </div>
 
         </l-map>
         <div id="results"></div>
@@ -53,7 +70,7 @@
                 </v-col>
               </v-row>
 
-              <v-select :items="allStations" item-text="name" item-value="trainStationId" label="Sélectionnez la Gare de Départ"
+              <v-select :items="allStations" item-text="name" item-value="trainStationId" label="Sélectionnez la Gare d'Arrivée"
                   v-model="idStationArrival" solo>
               </v-select>
             </v-col>
@@ -161,6 +178,8 @@ export default {
 
       copyTabInfosGaresLatLng : [],
 
+      idStationClicked : Number,
+
     }
   },
   methods: {
@@ -188,7 +207,7 @@ export default {
       let tbName=[];
       for(let i in tbObjet){
         tbName.push(tbObjet[i].name);
-        this.tabInfosGaresLatLng.push({"id": tbObjet[i].trainStationId,"name":tbObjet[i].name,"position":[tbObjet[i].latitude,tbObjet[i].longitude], draggable: true,
+        this.tabInfosGaresLatLng.push({"id": tbObjet[i].trainStationId,"name":tbObjet[i].name,"position":[tbObjet[i].latitude,tbObjet[i].longitude], "price":null, draggable: true,
           visible: true});
       }
       this.copyTabInfosGaresLatLng=this.tabInfosGaresLatLng;
@@ -198,7 +217,7 @@ export default {
     displayPopUpStation(){
       if(this.idStationDepart!=null && this.idStationArrival!=null){
         this.tabInfosGaresLatLng=[]
-        console.log(this.copyTabInfosGaresLatLng[1])
+        //console.log(this.copyTabInfosGaresLatLng[1])
         for(let i in this.copyTabInfosGaresLatLng){
           if(this.copyTabInfosGaresLatLng[i].id==this.idStationDepart || this.copyTabInfosGaresLatLng[i].id==this.idStationArrival){
             this.tabInfosGaresLatLng.push(this.copyTabInfosGaresLatLng[i])
@@ -208,7 +227,7 @@ export default {
       else{
         this.tabInfosGaresLatLng=this.copyTabInfosGaresLatLng
       }
-      console.log(this.tabInfosGaresLatLng)
+      //console.log(this.tabInfosGaresLatLng)
     },
 
     openPopup: function (event) {
@@ -221,6 +240,47 @@ export default {
       let tmpTabLatLng=[];
       this.tabInfosGaresLatLng.forEach(element => tmpTabLatLng.push(element.position));
       return tmpTabLatLng;
+    },
+
+    displayPolylineFromClicked(){
+      let tmpTabLatLng=[];
+      for(let i in this.tabInfosGaresLatLng){
+        let subTmpTab=[];
+        subTmpTab.push(this.tabInfosGaresLatLng[i].position)
+        subTmpTab.push(this.tabInfosGaresLatLng[0].position)
+        tmpTabLatLng.push(subTmpTab)
+      }
+      return tmpTabLatLng;
+    },
+
+    displayReachableStations : function(item) {
+      if(!this.hasSearch){
+
+        axios
+            .get('https://projet-web-trains.herokuapp.com/journeys/average?id-from='+item.id)
+            .then(response => this.loadReachableStations(response.data , item))
+      }
+    },
+
+    loadReachableStations(tabReachableStations,item){
+      
+      let nameReachableStation = []
+      nameReachableStation = Object.keys(tabReachableStations);
+
+      this.tabInfosGaresLatLng=[]
+      this.tabInfosGaresLatLng.push(item);
+      this.copyTabInfosGaresLatLng.forEach(element => element.price=null);
+
+      for(let i in nameReachableStation){
+        for(let j in this.copyTabInfosGaresLatLng){
+          if(nameReachableStation[i]==this.copyTabInfosGaresLatLng[j].name){
+            this.copyTabInfosGaresLatLng[j].price=tabReachableStations[nameReachableStation[i]]
+            this.tabInfosGaresLatLng.push(this.copyTabInfosGaresLatLng[j])
+
+          }
+        }
+      }
+
     },
 
   },
