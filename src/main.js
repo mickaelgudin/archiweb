@@ -68,7 +68,17 @@ const messages = {
     journeysResultsLine: 'Ligne',
     journeysResultsEmpty: 'Aucun trajet trouvé pour votre recherche',
     journeysTendancyTitle : 'Tendances des prix sur votre trajet', 
-    journeysTendancySecondTitle : 'Sur tous les trajets existants', 
+    journeysTendancySecondTitle : 'Sur tous les trajets existants',
+    hoursSelect :[
+      { text: 'Départ à' },
+      { text: 'Arrivée à'}
+    ],
+    selectHourLabel : 'Sélectionner l\'heure',
+    searchLabel : 'Rechercher',
+    selectStationDeparture : 'Gare de départ',
+    selectStationArrival : 'Gare d\'arrivée',
+    selectDate : 'Sélectionnez la date',
+    backButton : 'Retour'
   },
   en: {
     createStationTitle : 'Creating a new station',
@@ -90,6 +100,16 @@ const messages = {
     journeysResultsEmpty: 'No journey matching your criteria was found',
     journeysTendancyTitle : 'Prices tendancy on your journey', 
     journeysTendancySecondTitle : 'On all existing journeys', 
+    hoursSelect :[
+      { text: 'Departure at', icon: 'mdi-clock' },
+      { text: 'Arrival at', icon: 'mdi-clock-time-eight' }
+    ],
+    selectHourLabel : 'Select the hour',
+    searchLabel : 'Search',
+    selectStationDeparture : 'Station of departure',
+    selectStationArrival : 'Station of arrival',
+    selectDate : 'Select the date',
+    backButton : 'Back'
   }
 }
 

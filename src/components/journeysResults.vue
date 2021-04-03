@@ -44,12 +44,14 @@ import axios from 'axios'
 import toast from '../components/toast.vue'
   export default { 
     components: { toast },
+    props: {
+      hasSearch : {type:Boolean, default: true}
+    },
     data: () => ({
       from: -1,
       to: -1,
       journeys: [],
       model: 1,
-      hasSearch : false
     }),
     
     methods: {
@@ -64,7 +66,7 @@ import toast from '../components/toast.vue'
         getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType, selectedDate){
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
-            this.hasSearch = true;
+            this.hasSearch = false;
 
             if(idStationFrom && idStationTo) {
                 axios
@@ -106,6 +108,7 @@ import toast from '../components/toast.vue'
           });
 
           this.journeys = journeysFiltered;
+          this.hasSearch = true;
         },
         
         /**
