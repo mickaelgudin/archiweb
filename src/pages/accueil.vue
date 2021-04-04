@@ -20,7 +20,7 @@
 
           <div v-if="hasSearch">
           <l-marker v-for="(item, index) in tabInfosGaresLatLng" ref="marker" :key="index" :lat-lng="item.position"
-              :visible=true :draggable=true  @add="openPopup">
+              :visible=true :draggable=false  @add="openPopup">
             <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
               {{item.name}}
             </l-popup>
@@ -30,7 +30,7 @@
 
           <div v-if="!hasSearch || !flagReachableStations">
           <l-marker v-for="(item, index) in copyTabInfosGaresLatLng" @dblclick="displayReachableStations(item)" ref="marker" :key="index" :lat-lng="item.position"
-                    :visible=true :draggable=true  @add="openPopup">
+                    :visible=true :draggable=false  @add="openPopup">
             <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
               {{item.name}}
 
@@ -210,7 +210,7 @@ export default {
       let tbName=[];
       for(let i in tbObjet){
         tbName.push(tbObjet[i].name);
-        this.tabInfosGaresLatLng.push({"id": tbObjet[i].trainStationId,"name":tbObjet[i].name,"position":[tbObjet[i].latitude,tbObjet[i].longitude], "price":null, draggable: true,
+        this.tabInfosGaresLatLng.push({"id": tbObjet[i].trainStationId,"name":tbObjet[i].name,"position":[tbObjet[i].latitude,tbObjet[i].longitude], "price":null, draggable: false,
           visible: true});
       }
       this.copyTabInfosGaresLatLng=this.tabInfosGaresLatLng;
