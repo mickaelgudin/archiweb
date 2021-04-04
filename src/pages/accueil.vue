@@ -28,8 +28,8 @@
             <l-polyline :lat-lngs="displayPolyline()" :color="'blue'"></l-polyline>
           </div>
 
-          <div v-if="!hasSearch">
-          <l-marker v-for="(item, index) in copyTabInfosGaresLatLng" @click="displayReachableStations(item)" ref="marker" :key="index" :lat-lng="item.position"
+          <div v-if="!hasSearch || !flagReachableStations">
+          <l-marker v-for="(item, index) in copyTabInfosGaresLatLng" @dblclick="displayReachableStations(item)" ref="marker" :key="index" :lat-lng="item.position"
                     :visible=true :draggable=true  @add="openPopup">
             <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
               {{item.name}}
@@ -177,8 +177,9 @@ export default {
       tabInfosGaresLatLng: [],
 
       copyTabInfosGaresLatLng : [],
-
+      hasSearch : false,
       idStationClicked : Number,
+      flagReachableStations : true
 
     }
   },
@@ -227,7 +228,6 @@ export default {
       else{
         this.tabInfosGaresLatLng=this.copyTabInfosGaresLatLng
       }
-      //console.log(this.tabInfosGaresLatLng)
     },
 
     openPopup: function (event) {
@@ -254,11 +254,13 @@ export default {
     },
 
     displayReachableStations : function(item) {
-      if(!this.hasSearch){
+      if(!this.hasSearch && this.flagReachableStations){
 
         axios
             .get('https://projet-web-trains.herokuapp.com/journeys/average?id-from='+item.id)
             .then(response => this.loadReachableStations(response.data , item))
+      } else {
+        this.flagReachableStations = true;
       }
     },
 
@@ -280,7 +282,9 @@ export default {
           }
         }
       }
+      this.flagReachableStations = false;
 
+      return false;
     },
 
   },
