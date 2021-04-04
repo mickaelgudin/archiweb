@@ -48,84 +48,75 @@
       </v-col>
     </div>
 
-    <div style="margin-left:3%; margin-right:3%; margin-top:6%; margin-bottom:10%;">
+    <div style="margin-left:3%; margin-right:3%; margin-top:2%; margin-bottom:2%; padding-left:4px; padding-right:4px;">
       <v-card>
         <div style="margin-left:3%; margin-right:3%;">
-          <v-row justify="center">
+          <v-row v-if="hasSearch == false" justify="center">
             <v-col cols="6" sm="6" md="6" lg="4" xl="4">
-              <v-row justify="center" >
-                <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:9%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c">Gare de Départ</v-card-title>
-                </v-col>
-              </v-row>
-              <v-select :items="allStations" item-text="name" item-value="trainStationId" label="Sélectionnez la Gare de Départ"
-                  v-model="idStationDepart" solo>
+              <label>{{ $t('selectStationDeparture') }}</label>
+              <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationDepart" solo outlined>
               </v-select>
             </v-col>
 
             <v-col cols="6" sm="6" md="6" lg="4" xl="4">
-              <v-row justify="center" >
-                <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:9%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c">Gare d'Arrivée</v-card-title>
-                </v-col>
-              </v-row>
-
-              <v-select :items="allStations" item-text="name" item-value="trainStationId" label="Sélectionnez la Gare d'Arrivée"
-                  v-model="idStationArrival" solo>
+              <label>{{ $t('selectStationArrival') }}</label>
+              <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationArrival" solo outlined>
               </v-select>
             </v-col>
+             
           </v-row>
         </div>
 
-        <v-row justify="center">
-          <v-col cols="6" sm="6" md="4" lg="4" xl="4" style="margin-right:10%">
-            <v-card tile style="margin-top: 3%" >
-              <v-list rounded>
-                <v-subheader style="font-size: 20px">Sélectionnez l'heure de :</v-subheader>
-                <v-list-item-group  v-model="selectedItem" color="#60378c" >
-                  <v-list-item v-for="(item, i) in items" :key="i" >
-                    <v-list-item-icon>
-                      <v-icon v-text="item.icon"></v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item.text" style="font-size: 18px"></v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-card>
-          </v-col>
-
+        <v-row v-if="hasSearch == false" justify="center">
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
-              <v-date-picker v-model="selectedDate"></v-date-picker>
+            <label>{{ $t('selectDate') }}</label>
+            <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
+              transition="scale-transition" offset-y min-width="auto" >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field v-model="date" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                  v-on="on" >
+                </v-text-field>
+              </template>
+              <v-date-picker v-model="selectedDate" @input="menu2 = false"></v-date-picker>
+            </v-menu>
           </v-col>
-
+          
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
-            <v-time-picker
-                v-model="timeStep"
-                :allowed-minutes="allowedStep"
-                class="mt-4"
-                format="24hr"
-                color="#60378c"
-                scrollable
-            ></v-time-picker>
+            <v-radio-group v-model="selectedItem" row>
+              <v-radio v-for="hour in $t('hoursSelect')" :key="hour.text" :label="hour.text" :value="hour.text"></v-radio>
+            </v-radio-group>
+           <label>{{ $t('selectHourLabel') }}</label>
+           <v-select :items="hours"
+                  v-model="timeStep" solo outlined>
+              </v-select>
+          </v-col>
+          
+        </v-row>
+
+        <v-row v-if="hasSearch == false" justify="center">
+          <v-col cols="6" sm="6" md="4" lg="3" xl="3">
+            <v-btn rounded color="#60378c" dark @click="handleSearchJourneys" block :href='"#recherche"' 
+                    style="height:50px;width:50%; margin-bottom:3%; margin-top: 2%; text-decoration: none;" >
+                
+                <div style="color:white; font-size:18px;">{{ $t('searchLabel') }}</div>
+            </v-btn>
           </v-col>
         </v-row>
 
-        <v-row justify="center" >
-          <v-btn rounded color="#60378c" dark @click="handleSearchJourneys" :href='"#recherche"' 
-                   style="height:50px;width:50%; margin-bottom:3%; margin-top: 2%; text-decoration: none;" >
-              
-              <div style="color:white; font-size:18px;">Rechercher</div>
-        </v-btn>
-        </v-row>
+        <v-row justify="center" style="padding-top: 2rem; padding-bottom: 2rem">
+            <v-btn v-if="hasSearch" class="ma-2" color="red darken-2" dark @click="hasSearch = false;">
+              <v-icon dark left>
+                mdi-arrow-left
+              </v-icon>{{ $t('backButton') }}
+            </v-btn>
 
-        
-        <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
-        <journeys-results ref="journeys"></journeys-results>
-        <journeyTendancy v-if="hasSearch"></journeyTendancy>
+            <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
+            <journeys-results style="width: 40%; margin-right: 20px;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
+            <journeyTendancy style="width: 40%;" v-if="hasSearch"></journeyTendancy>
+          </v-row>
 
       </v-card>
+      
     </div>
   </div>
 </template>
@@ -167,22 +158,22 @@ export default {
 
       timeStep: this.getNow(),
 
+      hours: [ "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
+      "19:00", "20:00", "21:00", "22:00", "23:00"],
       allStations:[],
 
       selectedItem: 1,
-      items: [
-        { text: 'Départ', icon: 'mdi-clock' },
-        { text: 'Arrivée', icon: 'mdi-clock-time-eight' }
-      ],
       idStationDepart: Number,
       idStationArrival: Number,
 
       tabInfosGaresLatLng: [],
+      selectedDate : this.getToday(),
 
       copyTabInfosGaresLatLng : [],
       hasSearch : false,
       idStationClicked : Number,
-      flagReachableStations : true
+      flagReachableStations : true,
+      menu2 : false
 
     }
   },
@@ -193,6 +184,7 @@ export default {
     },
     handleSearchJourneys() {
       this.displayPopUpStation();
+      console.log('selectedDate ', this.selectedDate);
       //trigger function of journeysResults component to retrieve data
       this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
       
@@ -205,6 +197,11 @@ export default {
       let today = new Date();
 
       return today.getHours()+":"+today.getMinutes();
+    },
+
+    getToday() {
+      const today = new Date()
+      return new Date(today.getTime() - today.getTimezoneOffset() * 60 * 1000).toISOString().split('T')[0];
     },
 
     recupData(tbObjet){

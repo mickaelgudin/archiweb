@@ -47,9 +47,6 @@ export default {
             stationsList: []
         }
     },
-    created () {
-        this.titleCard = this.$t('createStationTitle');
-    },
     mounted () {
         axios
             .get('https://projet-web-trains.herokuapp.com/train-stations')

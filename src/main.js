@@ -63,7 +63,22 @@ const messages = {
         {text: 'Nom de la station', value: 'name'},
         {text: 'Longitude', value: 'longitude'},
         {text: 'Latitude', value: 'latitude'}
-    ]
+    ],
+    journeysResulsHeader: 'Trajets en lien avec votre recherche',
+    journeysResultsLine: 'Ligne',
+    journeysResultsEmpty: 'Aucun trajet trouvé pour votre recherche',
+    journeysTendancyTitle : 'Tendances des prix sur votre trajet', 
+    journeysTendancySecondTitle : 'Sur tous les trajets existants',
+    hoursSelect :[
+      { text: 'Départ à' },
+      { text: 'Arrivée à'}
+    ],
+    selectHourLabel : 'Sélectionner l\'heure',
+    searchLabel : 'Rechercher',
+    selectStationDeparture : 'Gare de départ',
+    selectStationArrival : 'Gare d\'arrivée',
+    selectDate : 'Sélectionnez la date',
+    backButton : 'Retour'
   },
   en: {
     createStationTitle : 'Creating a new station',
@@ -79,13 +94,28 @@ const messages = {
         {text: 'Name of the station', value: 'name'},
         {text: 'Longitude', value: 'longitude'},
         {text: 'Latitude', value: 'latitude'}
-    ]
+    ],
+    journeysResulsHeader: 'Journeys related to your search criteria',
+    journeysResultsLine: 'Line',
+    journeysResultsEmpty: 'No journey matching your criteria was found',
+    journeysTendancyTitle : 'Prices tendancy on your journey', 
+    journeysTendancySecondTitle : 'On all existing journeys', 
+    hoursSelect :[
+      { text: 'Departure at', icon: 'mdi-clock' },
+      { text: 'Arrival at', icon: 'mdi-clock-time-eight' }
+    ],
+    selectHourLabel : 'Select the hour',
+    searchLabel : 'Search',
+    selectStationDeparture : 'Station of departure',
+    selectStationArrival : 'Station of arrival',
+    selectDate : 'Select the date',
+    backButton : 'Back'
   }
 }
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: 'fr',
   messages,
 })
 Vue.component('l-popup', LPopup);

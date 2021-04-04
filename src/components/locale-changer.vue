@@ -26,7 +26,7 @@ export default {
        */
       changeLanguage : function() {
           axios
-            .get('https://projet-web-trains.herokuapp.com/language/'+this.$i18n.locale);
+            .put('https://projet-web-trains.herokuapp.com/language/'+this.$i18n.locale);
       }
   }
 }
