@@ -17,7 +17,7 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
   export default { 
     data: () => ({
       icon : 'mdi-arrow-right', //by default stable
@@ -26,15 +26,35 @@
     methods: {
         /**
         * get tendancy from api
-        * @param  {Number} idStationDepart element of date(month or day)
+        * @param  {Number} idStationDepart id station de départ
         * @param  {Number} idStationArrival element of date(month or day)
-        * @return {String}      formatted element of date
+        * 
         */
         getTendancy(idStationDepart, idStationArrival) {
             console.log(idStationDepart+idStationArrival);
 
-
+            if(idStationDepart&&idStationArrival){
+                axios
+                .get('https://projet-web-trains.herokuapp.com/journeys/tendancy?id-from='+idStationDepart+'&id-to=id'+idStationArrival)
+                .then(response => {
+                    if (response.data == "up"){
+                        this.classeCss='increasing'
+                        this.icon='mdi-top-right'
+                    }
+                    else if (response.data == "down"){
+                        this.classeCss='decreasing'
+                        this.icon='mdi-bottom-right'
+                    }
+                     else if (response.data == "stable"){
+                        this.classeCss='stable'
+                        this.icon='mdi-arrow-right'
+                    }
+                })
+                    
+            }
         } 
+
+
       
     }
   }
