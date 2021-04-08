@@ -1,16 +1,24 @@
 <template>
   <v-app >
-    <locale-changer></locale-changer>
+    <navbar-sidebar></navbar-sidebar>
+    <NavBarSideBar v-if="!isMobile"/>
+    <v-main v-else>
+      <v-container>
+        <NavBarSideBar/>
+      </v-container>
+    </v-main>
+
     <router-view></router-view>
   </v-app>
 
 </template>
 
 <script>
-import localeChanger from './components/locale-changer.vue';
+
+import NavBarSideBar from "./components/NavBarSideBar.vue";
 
 export default {
-  components: { localeChanger },
+  components: { NavBarSideBar },
   name: "App",
 
   data : () => ({
