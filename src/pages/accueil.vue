@@ -73,7 +73,7 @@
             <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
               transition="scale-transition" offset-y min-width="auto" >
               <template v-slot:activator="{ on, attrs }">
-                <v-text-field v-model="date" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                <v-text-field v-model="selectedDate" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
                   v-on="on" >
                 </v-text-field>
               </template>
@@ -109,10 +109,10 @@
                 mdi-arrow-left
               </v-icon>{{ $t('backButton') }}
             </v-btn>
-
+            
             <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
             <journeys-results style="width: 40%; margin-right: 20px;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
-            <journeyTendancy style="width: 40%;" v-if="hasSearch"></journeyTendancy>
+            <journey-tendancy style="width: 40%;" ref="tendancy" :hasSearch="hasSearch"></journey-tendancy>
           </v-row>
 
       </v-card>
@@ -168,7 +168,6 @@ export default {
 
       tabInfosGaresLatLng: [],
       selectedDate : this.getToday(),
-
       copyTabInfosGaresLatLng : [],
       hasSearch : false,
       idStationClicked : Number,
@@ -187,7 +186,9 @@ export default {
       console.log('selectedDate ', this.selectedDate);
       //trigger function of journeysResults component to retrieve data
       this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
-      
+      //get tendancy of prices between the two selected stations
+      this.$refs.tendancy.getTendancy(this.idStationDepart, this.idStationArrival);
+
       this.hasSearch = true;
       this.flagReachableStations = true;
     },

@@ -1,7 +1,16 @@
 <template>
-    <div id="recherche">
-            <h2 style="margin-bottom: 2%">{{$t('journeysTendancyTitle')}}</h2>
-            <v-card style="border: 2px solid #60378c; margin-bottom:10%">
+    <div id="tendancy" v-if="hasSearch">
+        <v-progress-circular
+            :size="70"
+            :width="7"
+            color="purple"
+            indeterminate
+            v-if="doneCallingApi == false"
+            ></v-progress-circular>
+
+            
+            <v-card  v-if="doneCallingApi" style="border: 2px solid #60378c; margin-bottom:10%">
+                <toast ref="toastTendancy"></toast>
                 <v-list-item-group color="#60378c">
                     <v-list-item>
                         <h3>{{$t('journeysTendancySecondTitle')}}</h3>
@@ -18,44 +27,53 @@
 
 <script>
 import axios from 'axios'
+import toast from '../components/toast.vue'
   export default { 
+    components: { toast },
     data: () => ({
       icon : 'mdi-arrow-right', //by default stable
-      classeCss : 'stable' //see css classes below
+      classeCss : 'stable', //see css classes below
+      doneCallingApi : false,
     }),
+     props: {
+      hasSearch : {type:Boolean, default: true}
+    },
     methods: {
         /**
         * get tendancy from api
-        * @param  {Number} idStationDepart id station de départ
-        * @param  {Number} idStationArrival element of date(month or day)
-        * 
+        * @param  {Number} idStationDepart id station of departure
+        * @param  {Number} idStationArrival id station of arrival
         */
         getTendancy(idStationDepart, idStationArrival) {
-            console.log(idStationDepart+idStationArrival);
+            this.doneCallingApi = false;
 
-            if(idStationDepart&&idStationArrival){
+            if(idStationDepart && idStationArrival){
                 axios
-                .get('https://projet-web-trains.herokuapp.com/journeys/tendancy?id-from='+idStationDepart+'&id-to=id'+idStationArrival)
+                .get('https://projet-web-trains.herokuapp.com/journeys/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
                 .then(response => {
                     if (response.data == "up"){
                         this.classeCss='increasing'
-                        this.icon='mdi-top-right'
+                        this.icon='mdi-arrow-top-right'
                     }
                     else if (response.data == "down"){
                         this.classeCss='decreasing'
-                        this.icon='mdi-bottom-right'
+                        this.icon='mdi-arrow-bottom-right'
                     }
                      else if (response.data == "stable"){
                         this.classeCss='stable'
                         this.icon='mdi-arrow-right'
                     }
-                })
+
+                    this.doneCallingApi = true;
+                }).catch(err => {
+                    if (err.response.status === 400) {
+                        this.$refs.toastTendancy.displayToast('error', err.response.data.message, 10);
+                    }
+                    this.doneCallingApi = true;
+                });
                     
             }
         } 
-
-
-      
     }
   }
 </script>

@@ -1,5 +1,14 @@
 <template>
     <div id="recherche" v-if="hasSearch"  >
+      <v-progress-circular
+            :size="70"
+            :width="7"
+            color="purple"
+            indeterminate
+            v-if="doneCallingApi == false"
+            ></v-progress-circular>
+
+
       <toast ref="toastJourneys"></toast>
       
           <h2 style="padding: 1px; margin-bottom: 2%">{{$t('journeysResulsHeader')}}</h2>
@@ -52,6 +61,7 @@ import toast from '../components/toast.vue'
       to: -1,
       journeys: [],
       model: 1,
+      doneCallingApi : false,
     }),
     
     methods: {
@@ -66,7 +76,8 @@ import toast from '../components/toast.vue'
         getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType, selectedDate){
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
-            this.hasSearch = false;
+
+            this.doneCallingApi = false;
 
             if(idStationFrom && idStationTo) {
                 axios
@@ -75,6 +86,7 @@ import toast from '../components/toast.vue'
                 .catch(err => {
                     if (err.response.status === 400) {
                         this.$refs.toastJourneys.displayToast('error', err.response.data.message, 10);
+                        this.doneCallingApi = true;
                     }
                 });
             }
@@ -108,7 +120,7 @@ import toast from '../components/toast.vue'
           });
 
           this.journeys = journeysFiltered;
-          this.hasSearch = true;
+          this.doneCallingApi = true;
         },
         
         /**
