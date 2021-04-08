@@ -260,7 +260,7 @@ export default {
       if(!this.hasSearch && this.flagReachableStations){
 
         axios
-            .get('https://projet-web-trains.herokuapp.com/journeys/average?id-from='+item.id)
+            .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'/'+'average?id-from='+item.id)
             .then(response => this.loadReachableStations(response.data , item))
       } else {
         this.flagReachableStations = true;

@@ -133,7 +133,7 @@ export default {
         */
         createStations: function() {
             axios.post(
-                    'https://projet-web-trains.herokuapp.com/train-stations', 
+                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale, 
                     JSON.stringify(this.newStation),
                     {
                         headers: { 
@@ -153,7 +153,7 @@ export default {
         */
         deleteStationById: function(id) {
             axios.delete(
-                    'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
+                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
                     {
                         headers: { 
                             'Content-Type' : 'application/json' 
@@ -179,7 +179,7 @@ export default {
         */
         updateStationById: function(id) {
             axios.put(
-                    'https://projet-web-trains.herokuapp.com/train-stations/' + id, 
+                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
                     JSON.stringify(this.newStation),
                     {
                         headers: { 

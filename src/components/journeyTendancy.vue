@@ -7,7 +7,6 @@
             indeterminate
             v-if="doneCallingApi == false"
             ></v-progress-circular>
-
             
             <v-card  v-if="doneCallingApi" style="border: 2px solid #60378c; margin-bottom:10%">
                 <toast ref="toastTendancy"></toast>
@@ -21,6 +20,26 @@
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-item-group>
+                <v-divider></v-divider>
+                <v-sparkline
+                :value="values"
+                :gradient="gradient"
+                smooth="10"
+                padding="8"
+                line-width="2"
+                stroke-linecap="round"
+                gradient-direction="top"
+                fill="false"
+                type="trend"
+                auto-line-width="false"
+                auto-draw
+                >
+                
+                <template v-slot:label="item">
+                    {{ item.value }}€
+                </template>
+                
+                </v-sparkline>
             </v-card>
     </div>
 </template>
@@ -34,6 +53,8 @@ import toast from '../components/toast.vue'
       icon : 'mdi-arrow-right', //by default stable
       classeCss : 'stable', //see css classes below
       doneCallingApi : false,
+      values : [],
+      gradient : ['red', 'orange', 'green']
     }),
      props: {
       hasSearch : {type:Boolean, default: true}
@@ -46,25 +67,30 @@ import toast from '../components/toast.vue'
         */
         getTendancy(idStationDepart, idStationArrival) {
             this.doneCallingApi = false;
+            axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 
             if(idStationDepart && idStationArrival){
+                //https://projet-web-trains.herokuapp.com 
                 axios
-                .get('https://projet-web-trains.herokuapp.com/journeys/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
+                .get('http://localhost:8088/journeys/'+this.$i18n.locale+'/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
                 .then(response => {
-                    if (response.data == "up"){
+                    let data = response.data;
+
+                    if (data.tendancy == "up"){
                         this.classeCss='increasing'
                         this.icon='mdi-arrow-top-right'
                     }
-                    else if (response.data == "down"){
+                    else if (data.tendancy == "down"){
                         this.classeCss='decreasing'
                         this.icon='mdi-arrow-bottom-right'
                     }
-                     else if (response.data == "stable"){
+                     else if (data.tendancy == "stable"){
                         this.classeCss='stable'
                         this.icon='mdi-arrow-right'
                     }
-
+                    this.values = data.allFarePrices;
                     this.doneCallingApi = true;
+                    
                 }).catch(err => {
                     if (err.response.status === 400) {
                         this.$refs.toastTendancy.displayToast('error', err.response.data.message, 10);
