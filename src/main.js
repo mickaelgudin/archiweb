@@ -59,24 +59,24 @@ const messages = {
     errorFormStation : 'Vous devez compléter les champs suivants : ',
     resetForm: 'Réinitialiser',
     headersStationCrud : [
-        {text: 'Id', value: 'trainStationId'},
-        {text: 'Nom de la station', value: 'name'},
-        {text: 'Longitude', value: 'longitude'},
-        {text: 'Latitude', value: 'latitude'}
+      {text: 'Id', value: 'trainStationId'},
+      {text: 'Nom de la station', value: 'name'},
+      {text: 'Longitude', value: 'longitude'},
+      {text: 'Latitude', value: 'latitude'}
     ],
     journeysResulsHeader: 'Trajets en lien avec votre recherche',
     journeysResultsLine: 'Ligne',
     journeysResultsEmpty: 'Aucun trajet trouvé pour votre recherche',
-    journeysTendancyTitle : 'Tendances des prix sur votre trajet', 
+    journeysTendancyTitle : 'Tendances des prix sur votre trajet',
     journeysTendancySecondTitle : 'Sur tous les trajets existants',
     hoursSelect :[
       { text: 'Départ à' },
       { text: 'Arrivée à'}
     ],
-    selectHourLabel : 'Sélectionner l\'heure',
+    selectHourLabel : 'Sélectionnez l\'heure',
     searchLabel : 'Rechercher',
-    selectStationDeparture : 'Gare de départ',
-    selectStationArrival : 'Gare d\'arrivée',
+    selectStationDeparture : 'Gare de Départ',
+    selectStationArrival : 'Gare d\'Arrivée',
     selectDate : 'Sélectionnez la date',
     backButton : 'Retour'
   },
@@ -90,16 +90,16 @@ const messages = {
     errorFormStation : 'You must complete the following fields : ',
     resetForm: 'Reset',
     headersStationCrud : [
-        {text: 'Id', value: 'trainStationId'},
-        {text: 'Name of the station', value: 'name'},
-        {text: 'Longitude', value: 'longitude'},
-        {text: 'Latitude', value: 'latitude'}
+      {text: 'Id', value: 'trainStationId'},
+      {text: 'Name of the station', value: 'name'},
+      {text: 'Longitude', value: 'longitude'},
+      {text: 'Latitude', value: 'latitude'}
     ],
     journeysResulsHeader: 'Journeys related to your search criteria',
     journeysResultsLine: 'Line',
     journeysResultsEmpty: 'No journey matching your criteria was found',
-    journeysTendancyTitle : 'Prices tendancy on your journey', 
-    journeysTendancySecondTitle : 'On all existing journeys', 
+    journeysTendancyTitle : 'Prices tendancy on your journey',
+    journeysTendancySecondTitle : 'On all existing journeys',
     hoursSelect :[
       { text: 'Departure at', icon: 'mdi-clock' },
       { text: 'Arrival at', icon: 'mdi-clock-time-eight' }
