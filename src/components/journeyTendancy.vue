@@ -67,12 +67,10 @@ import toast from '../components/toast.vue'
         */
         getTendancy(idStationDepart, idStationArrival) {
             this.doneCallingApi = false;
-            axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 
             if(idStationDepart && idStationArrival){
-                //https://projet-web-trains.herokuapp.com 
                 axios
-                .get('http://localhost:8088/journeys/'+this.$i18n.locale+'/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
+                .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
                 .then(response => {
                     let data = response.data;
 
