@@ -100,9 +100,6 @@ export default {
     }
 
 
-  },
-  computed: {
-    // ...mapGetters(['isAuthenticated', 'loggedInUser'])
   }
 }
 </script>

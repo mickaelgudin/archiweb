@@ -74,6 +74,7 @@ export default {
       this.newStation.longitude = item.longitude;
       this.newStation.latitude = item.latitude;
       this.typeForm = 'update';
+      window.scrollTo(0,0);
     },
     /**
      * handle onclick button update

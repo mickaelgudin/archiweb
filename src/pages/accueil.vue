@@ -2,20 +2,7 @@
   <div id="main">
     <div class="center" >
       <v-col cols="12" sm="12" md="10" lg="10" xl="10" justify="center">
-        <v-row style="margin-top:4%">
-          <v-col cols="2" sm="2" md="2" lg="2" xl="2" >
-            <v-avatar color="#60378c" width="100" height="100"
-                      style="border: 2px solid white; border-radius: 50%; margin-left:2%; margin-top:4%; margin-bottom: 4%"
-            >
-              <v-icon class="iconify" data-icon="mdi:train" style="color:white; height:70px"></v-icon>
-            </v-avatar>
-
-          </v-col>
-          <v-col cols="9" sm="9" md="9" lg="9" xl="9" justify="center" align="center" >
-            <h1 style="margin-top: 2%; margin-bottom:3%; color:white; font-size: 50px;" >RAIL WARS Trains</h1>
-          </v-col>
-        </v-row>
-        <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="border: 5px solid white;">
+        <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="margin-top:5rem; border: 5px solid white;">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
           <div v-if="hasSearch">
