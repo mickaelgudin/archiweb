@@ -15,7 +15,7 @@
             <h1 style="margin-top: 2%; margin-bottom:3%; color:white; font-size: 50px;" >RAIL WARS Trains</h1>
           </v-col>
         </v-row>
-        <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="border: 5px solid white; position:sticky">
+        <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="border: 5px solid white;">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
           <div v-if="hasSearch">
@@ -335,6 +335,7 @@ export default {
 #map {
   height: 500px;
   width: 100%;
+  position: sticky !important;
 }
 
 
