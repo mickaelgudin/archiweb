@@ -18,7 +18,7 @@
             <v-icon color="#60378c">{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title color="#60378c" v-text="item.title" />
+            <v-list-item-title color="#60378c" v-text="$t(item.title)" />
           </v-list-item-content>
         </v-list-item>
       </v-list>

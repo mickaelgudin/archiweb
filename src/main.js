@@ -54,7 +54,7 @@ const messages = {
   fr: {
     createStationTitle : 'Création d\'une nouvelle station',
     createStation: 'Créer une nouvelle station',
-    modifyStation: 'Modifier la station',
+    modifyStation: 'Modifier la station ',
     nameOfStation : 'nom de la station',
     longitude : 'longitude',
     latitude : 'latitude',
@@ -90,7 +90,7 @@ const messages = {
   en: {
     createStationTitle : 'Creating a new station',
     createStation: 'Create a new station',
-    modifyStation: 'Modify the station',
+    modifyStation: 'Modify the station ',
     nameOfStation : 'Name of the station',
     longitude : 'longitude',
     latitude : 'latitude',
@@ -129,7 +129,7 @@ const messages = {
   es: {
     createStationTitle : 'Creando una nueva estación',
     createStation: 'Crea una nueva estación',
-    modifyStation: 'Modificar la estación',
+    modifyStation: 'Modificar la estación ',
     nameOfStation : 'Nombre de la estación',
     longitude : 'longitud',
     latitude : 'latitud',
@@ -168,7 +168,7 @@ const messages = {
   it: {
     createStationTitle : 'Creazione di una nuova stazione',
     createStation: 'Crea una nuova stazione',
-    modifyStation: 'Modifica la stazione',
+    modifyStation: 'Modifica la stazione ',
     nameOfStation : 'Nome stazione',
     longitude : 'lunghezza',
     latitude : 'latitudine',
@@ -207,7 +207,7 @@ const messages = {
   de: {
     createStationTitle : 'Neue Station erstellen',
     createStation: 'Erstellen Sie eine neue Station',
-    modifyStation: 'Bearbeiten Sie den Sender : ',
+    modifyStation: 'Bearbeiten Sie den Sender ',
     nameOfStation : 'Stationsname',
     longitude : 'Länge',
     latitude : 'Breite',

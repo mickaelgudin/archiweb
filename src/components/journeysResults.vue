@@ -1,16 +1,15 @@
 <template>
     <div id="recherche" v-if="hasSearch" > 
-      <toast ref="alertj"></toast>
+      <toast ref="toastj"></toast>
 
       <div v-if="!showToast && journeys.length > 0">
         <h2 style="padding: 1px; margin-bottom: 2%">{{$t('journeysResulsHeader')}}</h2>
         <v-card style="border: 2px solid #60378c; padding:2%">
-          
-
           <v-list-item-group color="#60378c">
-            <h4 style="margin-bottom: 2%;">{{journeys[0].departureStation.name}}
+            <h4 style="margin-bottom: 2%;">
+              {{journeys[0].departureStation.name}}
               <v-icon class="iconify" data-icon="mdi-arrow-right" medium></v-icon>
-                {{journeys[0].arrivalStation.name}}
+              {{journeys[0].arrivalStation.name}}
             </h4>
             <v-list-item class="listStyle" v-for="(journey, i) in journeys" :key="i" >
             
@@ -20,9 +19,7 @@
                   {{ getHourFromDatetime(journey.arrivalDate) }}
               </v-list-item-content>
               <v-list-item-content style="margin-right: 6%;">
-                <v-avatar color="#60378c" width="20" height="40"
-                style="border: 2px solid white; border-radius: 10%;"
-                >
+                <v-avatar color="#60378c" width="20" height="40" style="border: 2px solid white; border-radius: 10%;">
                   <v-icon class="iconify" data-icon="mdi:train" style="color:white; height:80px"></v-icon>
                   <strong style="color:white;">{{ $t('journeysResultsLine') }} {{journey.line.name}}</strong>
                 </v-avatar>    
@@ -31,7 +28,6 @@
                 <strong>{{journey.farePrice}} €</strong>
               </v-list-item-content>
             </v-list-item>
-
           </v-list-item-group>
         </v-card>
       </div>
@@ -56,7 +52,7 @@ import toast from '../components/toast.vue'
     
     methods: {
         /**
-        * add 0 at the beginning for month or day
+        * call api to get journeys matching the search
         * @param  {Number} idStationFrom id of selected departure station
         * @param  {Number} idStationTo id of selected arrival station
         * @param  {String} timeStep selected time from form
@@ -73,7 +69,7 @@ import toast from '../components/toast.vue'
                 .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
                 .catch(err => {
                   if (err.response.status === 400) {
-                    this.$refs.alertj.displayToast('error', err.response.data.message, -1);
+                    this.$refs.toastj.displayToast('error', err.response.data.message, -1);
                   }
                 });
             }
@@ -90,7 +86,7 @@ import toast from '../components/toast.vue'
           let journeysFiltered = [];
           //case where api returned empty journeys
           if(!journeysReceived || journeysReceived.length == 0) {
-            this.$refs.alertj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
+            this.$refs.toastj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
             return;
           }
 
@@ -113,7 +109,7 @@ import toast from '../components/toast.vue'
 
           //case where the filtered journeys are empty
           if(!journeysFiltered || journeysFiltered.length == 0) {
-            this.$refs.alertj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
+            this.$refs.toastj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
             return;
           }
 
