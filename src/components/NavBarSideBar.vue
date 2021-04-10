@@ -48,11 +48,10 @@
 
 
       <v-btn large text v-for="(item, index) in items" :key="index"  color="#60378c" @click="redirect(item.to)">
-        {{item.title}}
+        {{ $t(item.title) }}
       </v-btn>
-      <div style="width:80px">
-        <locale-changer></locale-changer>
-      </div>
+     
+      <locale-changer></locale-changer>
     </v-app-bar>
 
 
@@ -61,9 +60,10 @@
 
 <script>
 import localeChanger from './locale-changer.vue';
+
 export default {
   components:{localeChanger },
-  name : "NavBarSideBar",
+  name : "sidebar",
   data () {
     return {
       clipped: true,
@@ -73,13 +73,18 @@ export default {
       items: [
         {
           icon: 'mdi-account-voice',
-          title: 'Accueil',
+          title: 'menuHome',
           to: '/'
         },
         {
           icon: 'mdi-database-plus',
-          title: 'Modification Stations',
+          title: 'menuCrudStation',
           to: '/stations'
+        },
+        {
+          icon: '',
+          title: 'menuApi',
+          to: '/api'
         }
       ],
       miniVariant: false,

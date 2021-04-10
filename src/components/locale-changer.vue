@@ -1,21 +1,35 @@
 <template>
-  <div class="locale-changer">
-    <v-container fluid>
-        <v-row align="center">
-            <v-col class="d-flex" cols="2" sm="1">
-                <v-select :items="langs" v-model="$i18n.locale"></v-select>
-            </v-col>
+  <div class="locale-changer" style="padding-top: 30px;">
+    <v-container>
+        <v-row>
+          <v-col cols="1" sm="6">
+              <v-select :items="langs" item-text="name" v-model="$i18n.locale" color="#60378c" solo outlined>
+                <template v-slot:item="{ item }">
+                  {{item.fullname}}
+                  <country-flag :country='item.flag' size='medium'/>
+                </template>
+              </v-select>
+          </v-col>
         </v-row>
     </v-container>
-
   </div>
 </template>
 
 <script>
+import CountryFlag from 'vue-country-flag'
+
 export default {
+  components : { CountryFlag },
   name: 'locale-changer',
   data () {
-    return { langs: ['fr', 'en'] }
+    return { 
+      langs: [{name : 'fr', fullname: 'Français', flag: 'fr'},
+              {name : 'en', fullname: 'English', flag: 'gb'}, 
+              {name : 'de', fullname: 'Deutsch', flag: 'de'},
+              {name : 'it', fullname: 'Italiano', flag: 'it'},
+              {name : 'es', fullname: 'Español', flag: 'es'}
+            ],
+    }
   }
 }
 </script>

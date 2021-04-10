@@ -1,10 +1,10 @@
 <template>
   <v-app >
-    <navbar-sidebar></navbar-sidebar>
-    <NavBarSideBar v-if="!isMobile"/>
+    <sidebar></sidebar>
+    <sidebar v-if="!isMobile"/>
     <v-main v-else>
       <v-container>
-        <NavBarSideBar/>
+        <sidebar/>
       </v-container>
     </v-main>
 
@@ -15,10 +15,10 @@
 
 <script>
 
-import NavBarSideBar from "./components/NavBarSideBar.vue";
+import sidebar from "./components/NavBarSideBar.vue";
 
 export default {
-  components: { NavBarSideBar },
+  components: { sidebar },
   name: "App",
 
   data : () => ({

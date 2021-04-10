@@ -1,6 +1,14 @@
 <template>
   <div id="main">
-    <div class="center" >
+    <v-progress-circular
+            :size="70"
+            :width="7"
+            color="purple"
+            indeterminate
+            v-if="doneGettingLoadingData == false"
+            ></v-progress-circular>  
+
+    <div class="center"  v-else>
       <v-col cols="12" sm="12" md="10" lg="10" xl="10" justify="center">
         <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="margin-top:5rem; border: 5px solid white;">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
@@ -20,11 +28,11 @@
                       :visible=true :draggable=false  @add="openPopup">
               <l-popup ref="popup" :options="{ autoClose: false, closeOnClick: false }">
                 {{item.name}}
+                <v-divider></v-divider>
+                <strong v-if="item.price!=null">
 
-                <div v-if="item.price!=null">
-
-                  Prix : {{item.price}} €
-                </div>
+                  {{$t('priceLabel')}} : {{item.price}} €
+                </strong>
               </l-popup>
             </l-marker>
             <l-polyline :lat-lngs="displayPolylineFromClicked()" :color="'blue'"></l-polyline>
@@ -35,10 +43,15 @@
       </v-col>
     </div>
 
-    <div style="margin-left:3%; margin-right:3%; margin-top:2%; margin-bottom:2%; padding-left:4px; padding-right:4px;">
+    <div style="margin-left:3%; margin-right:3%; margin-top:1%; margin-bottom:2%; padding-left:4px; padding-right:4px;">
       <v-card>
-        <div style="margin-left:3%; margin-right:3%;">
+        <div>
+          <v-toolbar style="margin-top:2%;" color="#e8e8e8" dark flat>
+              <v-toolbar-title style="color:#60378c; text-align: center">{{ (hasSearch) ? $t("searchResultsTitle") : $t("searchFormTitle") }} </v-toolbar-title>
+          </v-toolbar>
+
           <v-row v-if="hasSearch == false" justify="center">
+            
             <v-col cols="6" sm="6" md="6" lg="4" xl="4">
               <v-row justify="center" >
                 <v-col cols="12" sm="12" md="7" lg="7" xl="7">
@@ -68,7 +81,7 @@
             <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
                     transition="scale-transition" offset-y min-width="auto" >
               <template v-slot:activator="{ on, attrs }">
-                <v-text-field v-model="date" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                <v-text-field v-model="selectedDate" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
                               v-on="on" color="#60378c" >
                 </v-text-field>
               </template>
@@ -100,19 +113,22 @@
         </v-row>
 
         <div style="margin-left:2%; margin-right:2%">
-          <v-row style="padding-top: 2rem;">
-            <v-col cols="2" sm="2" md="2" lg="2" xl="2">
-              <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="hasSearch = false; ">
+          <v-row style="padding-top: 1rem;">
+            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="hasSearch = false; ">
                 <v-icon dark left>
                   mdi-arrow-left
                 </v-icon>{{ $t('backButton') }}
               </v-btn>
-            </v-col>
+            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="scrollUp">
+              <v-icon dark left>
+                mdi-arrow-up
+              </v-icon>
+            </v-btn>
           </v-row>
           <v-row justify=center style="padding-top: 2rem; padding-bottom: 2rem">
             <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
             <journeys-results style="width: 40%; margin-right: 20px;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
-            <journeyTendancy style="width: 40%;" v-if="hasSearch"></journeyTendancy>
+            <journey-tendancy style="width: 40%;" ref=tendancy :hasSearch="hasSearch"></journey-tendancy>
           </v-row>
 
         </div>
@@ -130,7 +146,6 @@ import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from 'vue2-leaflet';
 import axios from 'axios';
 import journeysResults from '../components/journeysResults.vue';
 import journeyTendancy from '../components/journeyTendancy.vue';
-//import Map from "@/components/Map";
 
 export default {
   name: "accueil",
@@ -145,6 +160,8 @@ export default {
   },
 
   mounted () {
+    this.$nextTick(()=> this.doneGettingLoadingData = false)
+
     axios
         .get('https://projet-web-trains.herokuapp.com/train-stations')
         .then(response => (this.recupData(response.data)))
@@ -175,8 +192,8 @@ export default {
       hasSearch : false,
       idStationClicked : Number,
       flagReachableStations : true,
-      menu2 : false
-
+      menu2 : false,
+      doneGettingLoadingData: false
     }
   },
   methods: {
@@ -184,11 +201,15 @@ export default {
     redirect(to){
       this.$router.push(to)
     },
+    scrollUp() {
+      window.scrollTo(0,0);
+    },
     handleSearchJourneys() {
       this.displayPopUpStation();
       console.log('selectedDate ', this.selectedDate);
       //trigger function of journeysResults component to retrieve data
       this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
+      this.$refs.tendancy.getTendancy(this.idStationDepart, this.idStationArrival);
 
       this.hasSearch = true;
       this.flagReachableStations = true;
@@ -216,6 +237,8 @@ export default {
           visible: true});
       }
       this.copyTabInfosGaresLatLng=this.tabInfosGaresLatLng;
+      this.doneGettingLoadingData = true;
+
       return tbName;
     },
 
@@ -292,14 +315,7 @@ export default {
     },
 
   },
-
-
-
-
-
 }
-
-
 </script>
 
 <style scoped>
@@ -307,7 +323,6 @@ export default {
 #main{
   background-color: #60378c;
 }
-
 
 .center {
   display: flex;
@@ -324,9 +339,6 @@ export default {
   width: 100%;
   position: sticky !important;
 }
-
-
-
 </style>
 
 

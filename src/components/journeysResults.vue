@@ -1,36 +1,30 @@
 <template>
-    <div id="recherche" v-if="hasSearch"  >
-      <v-progress-circular
-            :size="70"
-            :width="7"
-            color="purple"
-            indeterminate
-            v-if="doneCallingApi == false"
-            ></v-progress-circular>
+    <div id="recherche" v-if="hasSearch" > 
+      <toast ref="alertj"></toast>
 
+      <div v-if="!showToast && journeys.length > 0">
+        <h2 style="padding: 1px; margin-bottom: 2%">{{$t('journeysResulsHeader')}}</h2>
+        <v-card style="border: 2px solid #60378c; padding:2%">
+          
 
-      <toast ref="toastJourneys"></toast>
-      
-          <h2 style="padding: 1px; margin-bottom: 2%">{{$t('journeysResulsHeader')}}</h2>
-          <v-card style="border: 2px solid #60378c; padding:2%">
           <v-list-item-group color="#60378c">
-             <h4 style="margin-bottom: 2%;">{{journeys[0].departureStation.name}}
-               <v-icon class="iconify" data-icon="mdi-arrow-right" medium></v-icon>
+            <h4 style="margin-bottom: 2%;">{{journeys[0].departureStation.name}}
+              <v-icon class="iconify" data-icon="mdi-arrow-right" medium></v-icon>
                 {{journeys[0].arrivalStation.name}}
             </h4>
             <v-list-item class="listStyle" v-for="(journey, i) in journeys" :key="i" >
-             
+            
               <v-list-item-content style="font-weight: bold">
                   {{ getHourFromDatetime(journey.departureDate) }} 
                   -
-                   {{ getHourFromDatetime(journey.arrivalDate) }}
+                  {{ getHourFromDatetime(journey.arrivalDate) }}
               </v-list-item-content>
               <v-list-item-content style="margin-right: 6%;">
                 <v-avatar color="#60378c" width="20" height="40"
                 style="border: 2px solid white; border-radius: 10%;"
                 >
                   <v-icon class="iconify" data-icon="mdi:train" style="color:white; height:80px"></v-icon>
-                  <strong style="color:white;">{{$t('journeysResultsLine')}} {{journey.line.name}}</strong>
+                  <strong style="color:white;">{{ $t('journeysResultsLine') }} {{journey.line.name}}</strong>
                 </v-avatar>    
               </v-list-item-content>
               <v-list-item-content>
@@ -38,13 +32,9 @@
               </v-list-item-content>
             </v-list-item>
 
-             <v-list-item v-if="hasSearch && journeys.length == 0"> 
-                <v-list-item-content>
-                  {{$t('journeysResultsEmpty')}}
-                </v-list-item-content>
-             </v-list-item>
           </v-list-item-group>
-          </v-card>
+        </v-card>
+      </div>
     </div>
 </template>
 
@@ -61,7 +51,7 @@ import toast from '../components/toast.vue'
       to: -1,
       journeys: [],
       model: 1,
-      doneCallingApi : false,
+      showToast: false
     }),
     
     methods: {
@@ -76,18 +66,15 @@ import toast from '../components/toast.vue'
         getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType, selectedDate){
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
-
-            this.doneCallingApi = false;
-
+            this.showToast = false;
             if(idStationFrom && idStationTo) {
                 axios
                 .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'?id-from='+idStationFrom+'&id-to='+idStationTo)
                 .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
                 .catch(err => {
-                    if (err.response.status === 400) {
-                        this.$refs.toastJourneys.displayToast('error', err.response.data.message, 10);
-                        this.doneCallingApi = true;
-                    }
+                  if (err.response.status === 400) {
+                    this.$refs.alertj.displayToast('error', err.response.data.message, -1);
+                  }
                 });
             }
         },
@@ -101,6 +88,11 @@ import toast from '../components/toast.vue'
        */
         filterJourneys(journeysReceived, fromTime, fromTimeType, selectedDate) {
           let journeysFiltered = [];
+          //case where api returned empty journeys
+          if(!journeysReceived || journeysReceived.length == 0) {
+            this.$refs.alertj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
+            return;
+          }
 
           journeysReceived.forEach((journey) => {
             const dateToCompareWith = (fromTimeType == 0) ? journey.departureDate : journey.arrivalDate;
@@ -118,6 +110,12 @@ import toast from '../components/toast.vue'
             }
 
           });
+
+          //case where the filtered journeys are empty
+          if(!journeysFiltered || journeysFiltered.length == 0) {
+            this.$refs.alertj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
+            return;
+          }
 
           this.journeys = journeysFiltered;
           this.doneCallingApi = true;

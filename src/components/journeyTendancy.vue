@@ -1,46 +1,40 @@
 <template>
     <div id="tendancy" v-if="hasSearch">
-        <v-progress-circular
-            :size="70"
-            :width="7"
-            color="purple"
-            indeterminate
-            v-if="doneCallingApi == false"
-            ></v-progress-circular>
+        <toast ref="toastTendancy"></toast>
             
-            <v-card  v-if="doneCallingApi" style="border: 2px solid #60378c; margin-bottom:10%">
-                <toast ref="toastTendancy"></toast>
-                <v-list-item-group color="#60378c">
-                    <v-list-item>
-                        <h3>{{$t('journeysTendancySecondTitle')}}</h3>
-                        <v-list-item-content>
-                            <v-list-item-icon style="margin-left: 10%;">
-                                <v-icon :class="'iconify '+classeCss" :data-icon="icon" x-large></v-icon>
-                            </v-list-item-icon>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list-item-group>
-                <v-divider></v-divider>
-                <v-sparkline
-                :value="values"
-                :gradient="gradient"
-                smooth="10"
-                padding="8"
-                line-width="2"
-                stroke-linecap="round"
-                gradient-direction="top"
-                fill="false"
-                type="trend"
-                auto-line-width="false"
-                auto-draw
-                >
-                
-                <template v-slot:label="item">
-                    {{ item.value }}€
-                </template>
-                
-                </v-sparkline>
-            </v-card>
+        <v-card v-if="showToast == false" style="border: 2px solid #60378c; margin-bottom:10%">
+            
+            <v-list-item-group color="#60378c">
+                <v-list-item>
+                    <h3>{{$t('journeysTendancySecondTitle')}}</h3>
+                    <v-list-item-content>
+                        <v-list-item-icon style="margin-left: 10%;">
+                            <v-icon :class="'iconify '+classeCss" :data-icon="icon" x-large></v-icon>
+                        </v-list-item-icon>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list-item-group>
+            <v-divider></v-divider>
+            <v-sparkline
+            :value="values"
+            :gradient="gradient"
+            smooth="10"
+            padding="8"
+            line-width="2"
+            stroke-linecap="round"
+            gradient-direction="top"
+            :fill="false"
+            type="trend"
+            :auto-line-width="false"
+            auto-draw
+            >
+            
+            <template v-slot:label="item">
+                {{ item.value }}€
+            </template>
+            
+            </v-sparkline>
+        </v-card>
     </div>
 </template>
 
@@ -52,9 +46,9 @@ import toast from '../components/toast.vue'
     data: () => ({
       icon : 'mdi-arrow-right', //by default stable
       classeCss : 'stable', //see css classes below
-      doneCallingApi : false,
       values : [],
-      gradient : ['red', 'orange', 'green']
+      gradient : ['red', 'orange', 'green'],
+      showToast : false
     }),
      props: {
       hasSearch : {type:Boolean, default: true}
@@ -66,7 +60,7 @@ import toast from '../components/toast.vue'
         * @param  {Number} idStationArrival id station of arrival
         */
         getTendancy(idStationDepart, idStationArrival) {
-            this.doneCallingApi = false;
+            this.showToast = false;
 
             if(idStationDepart && idStationArrival){
                 axios
@@ -91,9 +85,9 @@ import toast from '../components/toast.vue'
                     
                 }).catch(err => {
                     if (err.response.status === 400) {
-                        this.$refs.toastTendancy.displayToast('error', err.response.data.message, 10);
+                        this.$refs.toastTendancy.displayToast('error', err.response.data.message, -1);
+                        this.showToast = true;
                     }
-                    this.doneCallingApi = true;
                 });
                     
             }

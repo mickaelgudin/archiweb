@@ -5,8 +5,10 @@
         <v-col cols="12" sm="12" md="8" lg="6" xl="6" justify="center">
           <v-card width="800" elevation="2" outlined shaped tile>
             <v-row justify="center" style="margin-top:1%">
-              <v-card-title v-if="typeForm == 'create'" style="font-size: 25px; color:#60378c">{{$t('createStation')}}</v-card-title>
-              <v-card-title v-if="typeForm == 'update'" style="font-size: 25px; color:#60378c">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
+               <v-toolbar style="width: 50%" color="#e8e8e8" dark flat>
+                  <v-card-title v-if="typeForm == 'create'" style="font-size: 25px; color:#60378c">{{$t('createStation')}}</v-card-title>
+                  <v-card-title v-if="typeForm == 'update'" style="font-size: 25px; color:#60378c">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
+               </v-toolbar>
             </v-row>
             <v-form ref="form" class="mb-4">
               <v-card style="padding : 1rem; margin: 1rem">
@@ -31,6 +33,7 @@
       <toast ref="toastDatatable"></toast>
       <v-row justify="center" style="margin-bottom: 2%">
         <v-col cols="12" sm="12" md="8" lg="6" xl="6" justify="center">
+          
           <datatable :items="stationsList" :headers="$t('headersStationCrud')"
                      v-on:edit="editStation" v-on:delete="deleteStation" ></datatable>
         </v-col>
@@ -38,8 +41,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import axios from 'axios'
@@ -137,128 +138,83 @@ export default {
 
       return errorAlert;
     },
+    
 
     /**
-     * calling api to create new station
-     */
+    * calling api to create new station
+    */
     createStations: function() {
-      axios.post(
-          'https://projet-web-trains.herokuapp.com/train-stations',
-          JSON.stringify(this.newStation),
-          {
-            headers: {
-              'Content-Type' : 'application/json'
-            }
-          }
-      )
-          .then((response) => {
+        axios.post(
+                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale, 
+                JSON.stringify(this.newStation),
+                {
+                    headers: { 
+                        'Content-Type' : 'application/json' 
+                    }
+                }
+        )
+        .then((response) => {
             this.stationsList.push(response.data);
-          });
+        });
 
     },
 
     /**
-     * calling api to delete the station with given id, custom error is throw by if id don't exist
-     * @param id id of the station to delete
-     */
+    * calling api to delete the station with given id, custom error is throw by if id don't exist
+    * @param id id of the station to delete
+    */
     deleteStationById: function(id) {
-      axios.delete(
-          'https://projet-web-trains.herokuapp.com/train-stations/' + id,
-          {
-            headers: {
-              'Content-Type' : 'application/json'
-            }
-          }
-      )
-          .then((response) => {
+        axios.delete(
+                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
+                {
+                    headers: { 
+                        'Content-Type' : 'application/json' 
+                    }
+                }
+        )
+        .then((response) => {
             console.log(response.data);
             this.stationsList = this.stationsList.filter(station => {
-              return station.trainStationId != id;
-            })
-          }).catch(err => {
-        if (err.response.status === 400) {
-          this.$refs.toastDatatable.displayToast('error', err.response.data.message, 10);
-        }
-      });
+                return station.trainStationId != id;
+            })   
+        }).catch(err => {
+            if (err.response.status === 400) {
+                this.$refs.toastDatatable.displayToast('error', err.response.data.message, 10);
+            }
+        });
+        
+    },
 
-            return errorAlert;
-        },
-
-        /**
-        * calling api to create new station
-        */
-        createStations: function() {
-            axios.post(
-                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale, 
-                    JSON.stringify(this.newStation),
-                    {
-                        headers: { 
-                            'Content-Type' : 'application/json' 
-                        }
+    /**
+    * calling api to update station with given, there is custom error from api if id don't exist
+    * @param id train station id to update
+    */
+    updateStationById: function(id) {
+        axios.put(
+                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
+                JSON.stringify(this.newStation),
+                {
+                    headers: { 
+                        'Content-Type' : 'application/json' 
                     }
-            )
-            .then((response) => {
-                this.stationsList.push(response.data);
-            });
-
-        },
-
-        /**
-        * calling api to delete the station with given id, custom error is throw by if id don't exist
-        * @param id id of the station to delete
-        */
-        deleteStationById: function(id) {
-            axios.delete(
-                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
-                    {
-                        headers: { 
-                            'Content-Type' : 'application/json' 
-                        }
-                    }
-            )
-            .then((response) => {
-                console.log(response.data);
-                this.stationsList = this.stationsList.filter(station => {
-                    return station.trainStationId != id;
-                })   
-            }).catch(err => {
-                if (err.response.status === 400) {
-                    this.$refs.toastDatatable.displayToast('error', err.response.data.message, 10);
+                }
+        )
+        .then((response) => {
+            let stations = [];
+            this.stationsList.forEach(station => {
+                if (station.trainStationId == id) {
+                    stations.push(response.data);
+                }
+                else {
+                    stations.push(station);
                 }
             });
-            
-        },
-
-        /**
-        * calling api to update station with given, there is custom error from api if id don't exist
-        * @param id train station id to update
-        */
-        updateStationById: function(id) {
-            axios.put(
-                    'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
-                    JSON.stringify(this.newStation),
-                    {
-                        headers: { 
-                            'Content-Type' : 'application/json' 
-                        }
-                    }
-            )
-            .then((response) => {
-                let stations = [];
-                this.stationsList.forEach(station => {
-                    if (station.trainStationId == id) {
-                        stations.push(response.data);
-                    }
-                    else {
-                        stations.push(station);
-                    }
-                });
-                this.stationsList = stations;   
-            }).catch(err => {
-                if (err.response.status === 400) {
-                    this.$refs.toast.displayToast('error', err.response.data.message, 10);
-                }
-            });
+            this.stationsList = stations;   
+        }).catch(err => {
+            if (err.response.status === 400) {
+                this.$refs.toast.displayToast('error', err.response.data.message, 10);
+            }
+        });
     }
   }
 }
