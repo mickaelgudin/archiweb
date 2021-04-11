@@ -43,64 +43,67 @@
       </v-col>
     </div>
 
-    <div style="margin-left:3%; margin-right:3%; margin-top:1%; margin-bottom:2%; padding-left:4px; padding-right:4px;">
+    <div style="margin: 1% 3% 2%;padding-left:4px; padding-right:4px;">
       <v-card>
         <div>
           <v-toolbar style="margin-top:2%;" color="#e8e8e8" dark flat>
               <v-toolbar-title style="color:#60378c; text-align: center">{{ (hasSearch) ? $t("searchResultsTitle") : $t("searchFormTitle") }} </v-toolbar-title>
           </v-toolbar>
+          <div class="marginDiv">
+            <v-row v-if="hasSearch == false" justify="center">
 
+              <v-col cols="12" sm="6" md="6" lg="4" xl="4">
+                <v-row justify="center" >
+                  <v-col cols="12" sm="12" md="7" lg="7" xl="7">
+                    <v-card-title  class="inputTitle">{{ $t('selectStationDeparture') }}</v-card-title>
+                  </v-col>
+                </v-row>
+                <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationDepart" color="#60378c" solo outlined>
+                </v-select>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="6" lg="4" xl="4">
+                <v-row justify="center" >
+                  <v-col cols="12" sm="12" md="7" lg="7" xl="7">
+                    <v-card-title  class="inputTitle">{{ $t('selectStationArrival') }}</v-card-title>
+                  </v-col>
+                </v-row>
+                <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationArrival" color="#60378c" solo outlined>
+                </v-select>
+              </v-col>
+
+            </v-row>
+          </div>
+        </div>
+
+        <div class="marginDiv">
           <v-row v-if="hasSearch == false" justify="center">
-            
-            <v-col cols="6" sm="6" md="6" lg="4" xl="4">
-              <v-row justify="center" >
-                <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c; word-break: normal;">{{ $t('selectStationDeparture') }}</v-card-title>
-                </v-col>
-              </v-row>
-              <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationDepart" color="#60378c" solo outlined>
-              </v-select>
+            <v-col cols="6" sm="6" md="4" lg="3" xl="3">
+              <label>{{ $t('selectDate') }}</label>
+              <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
+                      transition="scale-transition" offset-y min-width="auto" >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field v-model="selectedDate" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                v-on="on" color="#60378c" >
+                  </v-text-field>
+                </template>
+                <v-date-picker v-model="selectedDate" color="#60378c" @input="menu2 = false"></v-date-picker>
+              </v-menu>
             </v-col>
 
-            <v-col cols="6" sm="6" md="6" lg="4" xl="4">
-              <v-row justify="center" >
-                <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c; word-break: normal;">{{ $t('selectStationArrival') }}</v-card-title>
-                </v-col>
-              </v-row>
-              <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationArrival" color="#60378c" solo outlined>
+            <v-col cols="6" sm="6" md="4" lg="3" xl="3">
+              <v-radio-group v-model="selectedItem" row>
+                <v-radio v-for="hour in $t('hoursSelect')" :key="hour.text" :label="hour.text" :value="hour.text" color="#60378c"></v-radio>
+              </v-radio-group>
+              <label>{{ $t('selectHourLabel') }}</label>
+              <v-select :items="hours"
+                        color="#60378c"
+                        v-model="timeStep" solo outlined>
               </v-select>
             </v-col>
 
           </v-row>
         </div>
-
-        <v-row v-if="hasSearch == false" justify="center">
-          <v-col cols="6" sm="6" md="4" lg="3" xl="3">
-            <label>{{ $t('selectDate') }}</label>
-            <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
-                    transition="scale-transition" offset-y min-width="auto" >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field v-model="selectedDate" :label="selectedDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                              v-on="on" color="#60378c" >
-                </v-text-field>
-              </template>
-              <v-date-picker v-model="selectedDate" color="#60378c" @input="menu2 = false"></v-date-picker>
-            </v-menu>
-          </v-col>
-
-          <v-col cols="6" sm="6" md="4" lg="3" xl="3">
-            <v-radio-group v-model="selectedItem" row>
-              <v-radio v-for="hour in $t('hoursSelect')" :key="hour.text" :label="hour.text" :value="hour.text" color="#60378c"></v-radio>
-            </v-radio-group>
-            <label>{{ $t('selectHourLabel') }}</label>
-            <v-select :items="hours"
-                      color="#60378c"
-                      v-model="timeStep" solo outlined>
-            </v-select>
-          </v-col>
-
-        </v-row>
 
         <v-row v-if="hasSearch == false" justify="center">
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
@@ -112,7 +115,7 @@
           </v-col>
         </v-row>
 
-        <div style="margin-left:2%; margin-right:2%">
+        <div class="marginDiv">
           <v-row style="padding-top: 1rem;">
             <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="hasSearch = false; ">
                 <v-icon dark left>
@@ -389,6 +392,18 @@ export default {
   height: 500px;
   width: 100%;
   position: sticky !important;
+}
+
+.marginDiv{
+  margin-left:2%;
+  margin-right:2%;
+}
+
+.inputTitle{
+  margin: 4% 3% 3% 10%;
+  font-size: 25px;
+  color:#60378c;
+  word-break: normal;
 }
 </style>
 

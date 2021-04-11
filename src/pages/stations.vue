@@ -6,8 +6,8 @@
           <v-card width="800" elevation="2" outlined shaped tile>
             <v-row justify="center" style="margin-top:1%">
                <v-toolbar style="width: 50%" color="#e8e8e8" dark flat>
-                  <v-card-title v-if="typeForm == 'create'" style="font-size: 25px; color:#60378c">{{$t('createStation')}}</v-card-title>
-                  <v-card-title v-if="typeForm == 'update'" style="font-size: 25px; color:#60378c">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
+                  <v-card-title v-if="typeForm == 'create'" class="stationsPageTitle">{{$t('createStation')}}</v-card-title>
+                  <v-card-title v-if="typeForm == 'update'" class="stationsPageTitle">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
                </v-toolbar>
             </v-row>
             <v-form ref="form" class="mb-4">
@@ -221,8 +221,18 @@ export default {
 </script>
 
 <style>
-.v-application .blue--text.text--darken-2 {
-  color: #60378c !important;
-  caret-color: #60378c !important;
+
+:root{
+  --main-purple-color: #60378c;
 }
+.stationsPageTitle{
+  font-size: 25px;
+  color:var(--main-purple-color);
+}
+
+.v-application .blue--text.text--darken-2 {
+  color: var(--main-purple-color) !important;
+  caret-color: var(--main-purple-color) !important;
+}
+
 </style>

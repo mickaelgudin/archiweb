@@ -72,7 +72,7 @@ export default {
       isMobile: null,
       items: [
         {
-          icon: 'mdi-account-voice',
+          icon: 'mdi-home-map-marker',
           title: 'menuHome',
           to: '/'
         },
@@ -82,7 +82,7 @@ export default {
           to: '/stations'
         },
         {
-          icon: '',
+          icon: 'mdi-transit-connection-variant',
           title: 'menuApi',
           to: '/api'
         }
