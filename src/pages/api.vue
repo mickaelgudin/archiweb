@@ -1,16 +1,16 @@
 <template>
     <div id="main">
-      <v-card height="90%" style="margin-left:5%; margin-right:5%;" >
+      <v-card id="cardBackground">
         <v-toolbar style="margin-top: 80px;" color="#e8e8e8" dark flat>
-            <v-toolbar-title style="color:#60378c">{{ $t('apiTitle') }}</v-toolbar-title>
+            <v-toolbar-title class="titlesApi">{{ $t('apiTitle') }}</v-toolbar-title>
         </v-toolbar>
 
-        <v-btn rounded color="#60378c" dark style="margin-left: 2rem; margin-top: 20px;" href="https://projet-web-trains.herokuapp.com" target="_blank">
+        <v-btn id="swaggerButton" rounded color="#60378c" dark href="https://projet-web-trains.herokuapp.com" target="_blank">
             {{ $t('buttonToSwagger') }}
         </v-btn>
 
-        <v-toolbar style="margin-top: 80px; margin-bottom: 20px;" color="#e8e8e8" dark flat>
-            <v-toolbar-title style="color:#60378c">Nos sources d'inspirations</v-toolbar-title>
+        <v-toolbar id="titleSources" color="#e8e8e8" dark flat>
+            <v-toolbar-title class="titlesApi">Nos sources d'inspirations</v-toolbar-title>
         </v-toolbar>
 
         <v-row>
@@ -27,7 +27,7 @@
           </v-col>
         </v-row>
 
-        <div style="margin-left: 2%; margin-right:2%">
+        <div id="divMargin">
           <v-row align="center" justify="center">
 
               <v-dialog height="1000" width="800">
@@ -79,6 +79,10 @@ export default {
 
 <style>
 
+:root{
+  --main-purple-color: #60378c;
+}
+
 .center {
   display: flex;
   align-items: center;
@@ -86,7 +90,32 @@ export default {
 }
 
 #main{
-  background-color: #60378c;
+  background-color: var(--main-purple-color);;
   height:100%;
+}
+
+#cardBackground{
+  height:90%;
+  margin-left:5%;
+  margin-right:5%;
+}
+
+#swaggerButton{
+  margin-left: 2rem;
+  margin-top: 20px;
+}
+
+#titleSources{
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+
+.titlesApi {
+  color: var(--main-purple-color);
+}
+
+#divMargin{
+  margin-left: 2%;
+  margin-right:2%
 }
 </style>

@@ -10,7 +10,7 @@
 
     <div class="center"  v-else>
       <v-col cols="12" sm="12" md="10" lg="10" xl="10" justify="center">
-        <l-map id="map" ref="myMap" :zoom="zoom" :center="center" style="margin-top:5rem; border: 5px solid white;">
+        <l-map id="map" ref="myMap" :zoom="zoom" :center="center">
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
 
           <div v-if="hasSearch">
@@ -43,7 +43,7 @@
       </v-col>
     </div>
 
-    <div style="margin: 1% 3% 2%;padding-left:4px; padding-right:4px;">
+    <div id="divCardInput">
       <v-card>
         <div>
           <v-toolbar style="margin-top:2%;" color="#e8e8e8" dark flat>
@@ -108,7 +108,7 @@
         <v-row v-if="hasSearch == false" justify="center">
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
             <v-btn rounded color="#60378c" dark @click="handleSearchJourneys" block :href='"#recherche"'
-                   style="height:50px;width:50%; margin-bottom:3%; margin-top: 2%; text-decoration: none;" >
+                   id="btnSearchJourneys" >
 
               <div style="color:white; font-size:18px;">{{ $t('searchLabel') }}</div>
             </v-btn>
@@ -117,12 +117,12 @@
 
         <div class="marginDiv">
           <v-row style="padding-top: 1rem;">
-            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="hasSearch = false; ">
+            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" dark @click="hasSearch = false; ">
                 <v-icon dark left>
                   mdi-arrow-left
                 </v-icon>{{ $t('backButton') }}
               </v-btn>
-            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" style="height:50px" dark @click="scrollUp">
+            <v-btn v-if="hasSearch" class="ma-2" color="#60378c" dark @click="scrollUp">
               <v-icon dark left>
                 mdi-arrow-up
               </v-icon>
@@ -130,7 +130,7 @@
           </v-row>
           <v-row justify=center style="padding-top: 2rem; padding-bottom: 2rem">
             <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
-            <journeys-results style="width: 40%; margin-right: 20px;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
+            <journeys-results style="width: 40%; margin-right: 2%;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
             <journey-tendancy style="width: 40%;" ref=tendancy :hasSearch="hasSearch"></journey-tendancy>
           </v-row>
 
@@ -374,10 +374,6 @@ export default {
 
 <style scoped>
 
-#main{
-  background-color: #60378c;
-}
-
 .center {
   display: flex;
   align-items: center;
@@ -388,10 +384,30 @@ export default {
   border: 5px solid white;
 }
 
+#main{
+  background-color: #60378c;
+}
+
 #map {
   height: 500px;
   width: 100%;
   position: sticky !important;
+  margin-top:5rem;
+  border: 5px solid white;
+}
+
+#divCardInput{
+  margin: 1% 3% 2%;
+  padding-left:4px;
+  padding-right:4px;
+}
+
+#btnSearchJourneys{
+  height:50px;
+  width:50%;
+  margin-bottom:3%;
+  margin-top: 2%;
+  text-decoration: none;
 }
 
 .marginDiv{
@@ -404,6 +420,10 @@ export default {
   font-size: 25px;
   color:#60378c;
   word-break: normal;
+}
+
+.ma-2{
+  height:50px;
 }
 </style>
 

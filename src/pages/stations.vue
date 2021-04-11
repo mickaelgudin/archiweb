@@ -17,7 +17,7 @@
                 <v-text-field v-model="newStation.latitude" type="number" :label="$t('latitude')" color="#60378c" required></v-text-field>
               </v-card>
 
-              <div id="actionMenu" style="padding : 1rem; margin: 1rem">
+              <div id="actionMenu">
                 <v-row justify="center">
                   <v-btn v-if="typeForm == 'create' " color="#ffe6cc" class="mt-4" @click="createStation" style="color:#60378c">{{ $t('createStation') }}</v-btn>
                   <v-btn v-if="typeForm == 'update' " color="#ffe6cc" class="mt-4" @click="updateStation" style="color:#60378c">{{ $t('modifyStation') }}</v-btn>
@@ -233,6 +233,11 @@ export default {
 .v-application .blue--text.text--darken-2 {
   color: var(--main-purple-color) !important;
   caret-color: var(--main-purple-color) !important;
+}
+
+#actionMenu{
+  padding : 1rem;
+  margin: 1rem;
 }
 
 </style>
