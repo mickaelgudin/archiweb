@@ -82,7 +82,7 @@ const messages = {
     searchFormTitle : 'Rechercher un trajet',
     searchResultsTitle : 'Résultats de votre recherche',
     apiTitle : 'Notre API',
-    buttonToSwagger : 'Accèder à swagger',
+    buttonToSwagger : 'Accéder à swagger',
     apiButtonsHeader : 'Partie de l\'api que nous avons utilisé',
     exempleJourneysButton : 'EXEMPLE DE TRAJET',
     exempleStationButton : 'EXEMPLE DE STATION & LIGNES',

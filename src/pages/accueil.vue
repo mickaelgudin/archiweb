@@ -55,7 +55,7 @@
             <v-col cols="6" sm="6" md="6" lg="4" xl="4">
               <v-row justify="center" >
                 <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c">{{ $t('selectStationDeparture') }}</v-card-title>
+                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c; word-break: normal;">{{ $t('selectStationDeparture') }}</v-card-title>
                 </v-col>
               </v-row>
               <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationDepart" color="#60378c" solo outlined>
@@ -65,7 +65,7 @@
             <v-col cols="6" sm="6" md="6" lg="4" xl="4">
               <v-row justify="center" >
                 <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c">{{ $t('selectStationArrival') }}</v-card-title>
+                  <v-card-title  style="margin-top:4%;margin-left: 10%; margin-right: 3%; margin-bottom:3%; font-size: 25px; color:#60378c; word-break: normal;">{{ $t('selectStationArrival') }}</v-card-title>
                 </v-col>
               </v-row>
               <v-select :items="allStations" item-text="name" item-value="trainStationId" v-model="idStationArrival" color="#60378c" solo outlined>
@@ -198,15 +198,27 @@ export default {
   },
   methods: {
 
+    /**
+     * changes, redirects to the page
+     * @param to :  name of the page to redirect
+     */
     redirect(to){
       this.$router.push(to)
     },
+
+    /**
+     * scrolls the window until the coordinate (0,0)
+     */
     scrollUp() {
       window.scrollTo(0,0);
     },
+
+    /**
+     * calls the method displayPopUpStation() to display the departure and arrival stations on the map
+     * and displays the journeys and tendency results about the departure and arrival stations and date selected in the inputs
+     */
     handleSearchJourneys() {
       this.displayPopUpStation();
-      console.log('selectedDate ', this.selectedDate);
       //trigger function of journeysResults component to retrieve data
       this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
       this.$refs.tendancy.getTendancy(this.idStationDepart, this.idStationArrival);
@@ -216,17 +228,28 @@ export default {
     },
 
     allowedStep: m => m % 10 === 0,
+    /**
+     * returns the current hour and minutes in a String format
+     */
     getNow(){
       let today = new Date();
-
       return today.getHours()+":"+today.getMinutes();
     },
 
+    /**
+     * returns today's date in Date format
+     */
     getToday() {
       const today = new Date()
       return new Date(today.getTime() - today.getTimezoneOffset() * 60 * 1000).toISOString().split('T')[0];
     },
 
+    /**
+     * uses the api response containing all the train stations information to initialize variables
+     * and returns names of all the stations existing
+     * @param tbObjet : the api response containing information about any train stations
+     * @returns {[]} names of every stations existing
+    */
     recupData(tbObjet){
       this.allStations = tbObjet;
 
@@ -242,10 +265,14 @@ export default {
       return tbName;
     },
 
+    /**
+     * adds the departure and arrival stations selected in the select inputs
+     * into an array to display those two stations (markers) and their information (popup) on the map
+     *
+     */
     displayPopUpStation(){
       if(this.idStationDepart!=null && this.idStationArrival!=null){
         this.tabInfosGaresLatLng=[]
-        //console.log(this.copyTabInfosGaresLatLng[1])
         for(let i in this.copyTabInfosGaresLatLng){
           if(this.copyTabInfosGaresLatLng[i].id==this.idStationDepart || this.copyTabInfosGaresLatLng[i].id==this.idStationArrival){
             this.tabInfosGaresLatLng.push(this.copyTabInfosGaresLatLng[i])
@@ -257,18 +284,31 @@ export default {
       }
     },
 
+    /**
+     * displays the markers popup on the map
+     * @param event any change on the map
+     */
     openPopup: function (event) {
       this.$nextTick(() => {
         event.target.openPopup();
       })
     },
 
+    /**
+     * returns an array of positions to draw lines between stations on the map
+     * @returns {[]} an array of positions (latitude,longitude)
+     */
     displayPolyline(){
       let tmpTabLatLng=[];
       this.tabInfosGaresLatLng.forEach(element => tmpTabLatLng.push(element.position));
       return tmpTabLatLng;
     },
 
+    /**
+     * returns an array of positions to draw lines between stations on the map
+     * and adding to it the departure station position for each loop iteration
+     * @returns {[]} an array of positions (latitude,longitude)
+     */
     displayPolylineFromClicked(){
       let tmpTabLatLng=[];
       for(let i in this.tabInfosGaresLatLng){
@@ -280,9 +320,13 @@ export default {
       return tmpTabLatLng;
     },
 
+    /**
+     * calling api for a selected station on the map and returns
+     * reachable stations from the selected one
+     * @param item : a marker,station clicked on the map uses in the api call
+     */
     displayReachableStations : function(item) {
       if(!this.hasSearch && this.flagReachableStations){
-
         axios
             .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'/'+'average?id-from='+item.id)
             .then(response => this.loadReachableStations(response.data , item))
@@ -291,6 +335,13 @@ export default {
       }
     },
 
+    /**
+     * add the selected marker,station on the map, plus all the reachable stations from it
+     * to the array which will display them on the map
+     * @param tabReachableStations : array of reachable stations returns by api to add to display them
+     * @param item : selected marker, station on the map used as the origin to get the reachable stations
+     * @return {boolean}
+     */
     loadReachableStations(tabReachableStations,item){
 
       let nameReachableStation = []
