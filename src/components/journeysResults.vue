@@ -1,8 +1,8 @@
 <template>
     <div id="recherche" v-if="hasSearch" > 
       <toast ref="toastj"></toast>
-
-      <div v-if="!showToast && journeys.length > 0">
+      
+      <div v-if="showToast == false && journeys.length > 0">
         <h2 style="padding: 1px; margin-bottom: 2%">{{$t('journeysResulsHeader')}}</h2>
         <v-card style="border: 2px solid #60378c; padding:2%">
           <v-list-item-group color="#60378c">
@@ -46,7 +46,6 @@ import toast from '../components/toast.vue'
       from: -1,
       to: -1,
       journeys: [],
-      model: 1,
       showToast: false
     }),
     
@@ -60,6 +59,7 @@ import toast from '../components/toast.vue'
         * @param  {Number} selectedDate date selected from datepicker
         */
         getJourneys(idStationFrom, idStationTo, timeStep, fromTimeType, selectedDate){
+            this.journeys = [];
             //time step format is : hour:minutes -> here we convert it to number for comparaison with available journeys
             let fromTime = Number(timeStep.replaceAll(':', ''));
             this.showToast = false;
@@ -69,8 +69,14 @@ import toast from '../components/toast.vue'
                 .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
                 .catch(err => {
                   if (err.response.status === 400) {
+                    this.showToast = true;
                     this.$refs.toastj.displayToast('error', err.response.data.message, -1);
                   }
+                  if(err.response.status === 404) {
+                    this.showToast = true;
+                    this.$refs.toastj.displayToast('error', this.$t('journeysResultsEmpty'), -1);
+                  }
+
                 });
             }
         },
@@ -83,6 +89,7 @@ import toast from '../components/toast.vue'
        * @param  {Number} selectedDate date selected from datepicker
        */
         filterJourneys(journeysReceived, fromTime, fromTimeType, selectedDate) {
+          console.log('');
           let journeysFiltered = [];
           //case where api returned empty journeys
           if(!journeysReceived || journeysReceived.length == 0) {

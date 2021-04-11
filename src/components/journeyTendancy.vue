@@ -19,8 +19,8 @@
             :value="values"
             :gradient="gradient"
             smooth="10"
-            padding="8"
-            line-width="2"
+            padding="6"
+            line-width="4"
             stroke-linecap="round"
             gradient-direction="top"
             :fill="false"
@@ -61,6 +61,9 @@ import toast from '../components/toast.vue'
         */
         getTendancy(idStationDepart, idStationArrival) {
             this.showToast = false;
+            this.values = [];
+            this.classeCss = '';
+            this.icon = '';
 
             if(idStationDepart && idStationArrival){
                 axios
@@ -81,6 +84,11 @@ import toast from '../components/toast.vue'
                         this.icon='mdi-arrow-right'
                     }
                     this.values = data.allFarePrices;
+                    //avoid line not drawed if array has only one fare price
+                    if(data.allFarePrices && data.allFarePrices.length == 1) {
+                        this.values.push(data.allFarePrices[0]);
+                    }
+
                     this.doneCallingApi = true;
                     
                 }).catch(err => {

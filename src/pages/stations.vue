@@ -100,7 +100,7 @@ export default {
       if(errorAlert === this.$t('errorFormStation')) {
         this.createStations();
       } else {
-        this.$refs.toast.displayToast('error', errorAlert, 6);
+        this.$refs.toast.displayToast('error', errorAlert, 15);
       }
     },
 
@@ -179,7 +179,7 @@ export default {
             })   
         }).catch(err => {
             if (err.response.status === 400) {
-                this.$refs.toastDatatable.displayToast('error', err.response.data.message, 10);
+                this.$refs.toastDatatable.displayToast('error', err.response.data.message, 15);
             }
         });
         
@@ -212,7 +212,7 @@ export default {
             this.stationsList = stations;   
         }).catch(err => {
             if (err.response.status === 400) {
-                this.$refs.toast.displayToast('error', err.response.data.message, 10);
+                this.$refs.toast.displayToast('error', err.response.data.message, 15);
             }
         });
     }

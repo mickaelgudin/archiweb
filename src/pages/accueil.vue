@@ -51,7 +51,7 @@
           </v-toolbar>
           <div class="marginDiv">
             <v-row v-if="hasSearch == false" justify="center">
-
+              
               <v-col cols="12" sm="6" md="6" lg="4" xl="4">
                 <v-row justify="center" >
                   <v-col cols="12" sm="12" md="7" lg="7" xl="7">
@@ -105,6 +105,8 @@
           </v-row>
         </div>
 
+
+        <toast ref="toastSearch"></toast>
         <v-row v-if="hasSearch == false" justify="center">
           <v-col cols="6" sm="6" md="4" lg="3" xl="3">
             <v-btn rounded color="#60378c" dark @click="handleSearchJourneys" block :href='"#recherche"'
@@ -131,7 +133,7 @@
           <v-row justify=center style="padding-top: 2rem; padding-bottom: 2rem">
             <!-- JOURNEY RESULTS WHEN BUTTON SEARCH IS CLICKED AND API RETURNED JOURNEYS -->
             <journeys-results style="width: 40%; margin-right: 2%;" ref="journeys" :hasSearch="hasSearch"></journeys-results>
-            <journey-tendancy style="width: 40%;" ref=tendancy :hasSearch="hasSearch"></journey-tendancy>
+            <journey-tendancy style="width: 50%;" ref=tendancy :hasSearch="hasSearch"></journey-tendancy>
           </v-row>
 
         </div>
@@ -147,12 +149,14 @@
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from 'vue2-leaflet';
 import axios from 'axios';
+import toast from '../components/toast.vue';
 import journeysResults from '../components/journeysResults.vue';
 import journeyTendancy from '../components/journeyTendancy.vue';
 
 export default {
   name: "accueil",
   components:{
+    toast,
     LMap,
     LTileLayer,
     LMarker,
@@ -170,6 +174,10 @@ export default {
         .then(response => (this.recupData(response.data)))
   },
 
+  created () {
+    this.selectedItem = this.$t('hoursSelect')[0].text;
+  },
+
   data () {
     return{
 
@@ -180,13 +188,15 @@ export default {
 
       timeStep: this.getNow(),
 
-      hours: [ "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
-        "19:00", "20:00", "21:00", "22:00", "23:00"],
+      hours: [ "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", 
+              "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", 
+              "22:00", "22:30", "23:00", "23:30"
+            ],
       allStations:[],
 
       selectedItem: 1,
-      idStationDepart: Number,
-      idStationArrival: Number,
+      idStationDepart: 0,
+      idStationArrival: 0,
 
       tabInfosGaresLatLng: [],
       selectedDate : this.getToday(),
@@ -221,22 +231,48 @@ export default {
      * and displays the journeys and tendency results about the departure and arrival stations and date selected in the inputs
      */
     handleSearchJourneys() {
-      this.displayPopUpStation();
-      //trigger function of journeysResults component to retrieve data
-      this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
-      this.$refs.tendancy.getTendancy(this.idStationDepart, this.idStationArrival);
+      console.log('this.checkFormSearch() ', this.checkFormSearch());
+      if(this.checkFormSearch() ) {
+        this.displayPopUpStation();
+        //trigger function of journeysResults component to retrieve data
+        this.$refs.journeys.getJourneys(this.idStationDepart, this.idStationArrival, this.timeStep, this.selectedItem, this.selectedDate);
+        this.$refs.tendancy.getTendancy(this.idStationDepart, this.idStationArrival);
 
-      this.hasSearch = true;
-      this.flagReachableStations = true;
+        this.hasSearch = true;
+        this.flagReachableStations = true;
+      }
+    },
+
+    /**
+     * check fields selected stations
+     * @returns boolean which describes if the api can be called
+     */
+    checkFormSearch() {
+      let errorMessage = this.$t('errorFormStation');
+      if(!this.idStationDepart) {
+        errorMessage += this.$t('selectStationDeparture');
+      } 
+      if(!this.idStationArrival) {
+        if(errorMessage.includes(this.$t('selectStationDeparture')) ) {
+            errorMessage += ', ';
+        }
+        errorMessage += this.$t('selectStationArrival');
+      }
+
+      if(errorMessage !== this.$t('errorFormStation')) {
+        this.$refs.toastSearch.displayToast('error', errorMessage, 15);
+        return false;
+      }
+      return true;
     },
 
     allowedStep: m => m % 10 === 0,
     /**
-     * returns the current hour and minutes in a String format
+     * returns the current hour in a String format
      */
     getNow(){
       let today = new Date();
-      return today.getHours()+":"+today.getMinutes();
+      return today.getHours()+":00";
     },
 
     /**

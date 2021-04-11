@@ -172,7 +172,7 @@ const messages = {
     nameOfStation : 'Nome stazione',
     longitude : 'lunghezza',
     latitude : 'latitudine',
-    errorFormStation : 'Debes completar los siguientes campos: ',
+    errorFormStation : 'È necessario completare i seguenti campi : ',
     resetForm: 'Ricomincia',
     headersStationCrud : [
       {text: 'Id', value: 'trainStationId'},
@@ -211,7 +211,7 @@ const messages = {
     nameOfStation : 'Stationsname',
     longitude : 'Länge',
     latitude : 'Breite',
-    errorFormStation : 'Debes completear los siguientes campos:',
+    errorFormStation : 'Sie müssen die folgenden Felder ausfüllen : ',
     resetForm: 'Neustart',
     headersStationCrud : [
       {text: 'Id', value: 'trainStationId'},
