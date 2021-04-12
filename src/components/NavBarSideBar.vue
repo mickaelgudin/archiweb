@@ -21,6 +21,9 @@
             <v-list-item-title color="#60378c" v-text="$t(item.title)" />
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <locale-changer></locale-changer>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -44,17 +47,22 @@
       <v-toolbar-title class="aroundTitle" v-text="title" @click="redirect('/')">
       </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+      <v-spacer ></v-spacer>
 
-
-      <v-btn large text v-for="(item, index) in items" :key="index"  color="#60378c" @click="redirect(item.to)">
-        {{ $t(item.title) }}
-      </v-btn>
-     
-      <locale-changer></locale-changer>
+      <v-menu v-if="!isMobile" offset-x>
+        
+          <template v-slot:activator="{ on }">
+            
+            <v-btn large text v-for="(item, index) in items" :key="index" v-on="on" color="#60378c" @click="redirect(item.to)">
+              {{ $t(item.title) }}
+            </v-btn>
+            
+          </template>
+          
+      </v-menu>
+      <locale-changer v-if="!isMobile"></locale-changer>
+      
     </v-app-bar>
-
-
   </div>
 </template>
 
@@ -72,9 +80,9 @@ export default {
       isMobile: null,
       items: [
         {
-          icon: 'mdi-home-map-marker',
-          title: 'menuHome',
-          to: '/'
+          icon: 'mdi-transit-connection-variant',
+          title: 'menuApi',
+          to: '/api'
         },
         {
           icon: 'mdi-database-plus',
@@ -82,10 +90,10 @@ export default {
           to: '/stations'
         },
         {
-          icon: 'mdi-transit-connection-variant',
-          title: 'menuApi',
-          to: '/api'
-        }
+          icon: 'mdi-home-map-marker',
+          title: 'menuHome',
+          to: '/'
+        },
       ],
       miniVariant: false,
       right: true,

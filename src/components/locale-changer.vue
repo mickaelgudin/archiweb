@@ -2,7 +2,7 @@
   <div class="locale-changer" style="padding-top: 30px;">
     <v-container>
         <v-row>
-          <v-col cols="1" sm="6">
+          <v-col cols="5" sm="5">
               <v-select :items="langs" item-text="name" v-model="$i18n.locale" color="#60378c" solo outlined>
                 <template v-slot:item="{ item }">
                   {{item.fullname}}

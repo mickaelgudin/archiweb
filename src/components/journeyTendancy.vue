@@ -89,6 +89,25 @@ import toast from '../components/toast.vue'
                         this.values.push(data.allFarePrices[0]);
                     }
 
+                    //we want to avoid reduncance in data display(we only want to show price changes not all prices)
+                    if(data.allFarePrices && data.allFarePrices.length > 3) {
+                        let valuesFiltered = [];
+                        let currentPrice = data.allFarePrices[0];
+                        valuesFiltered.push(data.allFarePrices[0]);
+
+                        for(let i=1; i<data.allFarePrices.length; i+=1) {
+                            if(data.allFarePrices[i] != currentPrice) {
+                                valuesFiltered.push(data.allFarePrices[i]);
+                                currentPrice = data.allFarePrices[i];
+                            } 
+                        }
+                        if(valuesFiltered.length == 1) {
+                            //special case - we need at least two values
+                            valuesFiltered.push(data.allFarePrices[0]);
+                        }
+                        this.values = valuesFiltered;
+                    }
+
                     this.doneCallingApi = true;
                     
                 }).catch(err => {
@@ -113,5 +132,5 @@ import toast from '../components/toast.vue'
     }
     .stable {
         color: blue !important;
-    }
+    } 
 </style>
