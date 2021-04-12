@@ -1,18 +1,9 @@
 <template>
   <div>
-    <v-navigation-drawer
-        v-model="drawer"
-        app
-        absolute
-        temporary
-    >
+    <v-navigation-drawer v-model="drawer" app absolute temporary >
       <v-list>
-        <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            :to="item.to"
-            router
-            exact
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to"
+            router exact
         >
           <v-list-item-action>
             <v-icon color="#60378c">{{ item.icon }}</v-icon>
@@ -26,11 +17,9 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-        :clipped-left="clipped"
-        fixed
-        app
-    >
+
+    <!--app bar desktop-->
+    <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title  class="aroundLogo">
       </v-toolbar-title>
@@ -47,20 +36,15 @@
       <v-toolbar-title class="aroundTitle" v-text="title" @click="redirect('/')">
       </v-toolbar-title>
 
-      <v-spacer ></v-spacer>
+      <v-toolbar v-if="!isMobile" color="#F5F5F5" style="box-shadow: none;">
+        <v-spacer ></v-spacer>
+        <v-btn large text v-for="(item, index) in items" :key="index" v-on="on" color="#60378c" @click="redirect(item.to)">
+          {{ $t(item.title) }}
+        </v-btn>         
+        <locale-changer ></locale-changer>   
+      </v-toolbar>    
 
-      <v-menu v-if="!isMobile" offset-x>
-        
-          <template v-slot:activator="{ on }">
-            
-            <v-btn large text v-for="(item, index) in items" :key="index" v-on="on" color="#60378c" @click="redirect(item.to)">
-              {{ $t(item.title) }}
-            </v-btn>
-            
-          </template>
-          
-      </v-menu>
-      <locale-changer v-if="!isMobile"></locale-changer>
+      
       
     </v-app-bar>
   </div>
@@ -80,6 +64,11 @@ export default {
       isMobile: null,
       items: [
         {
+          icon: 'mdi-home-map-marker',
+          title: 'menuHome',
+          to: '/'
+        },
+        {
           icon: 'mdi-transit-connection-variant',
           title: 'menuApi',
           to: '/api'
@@ -88,16 +77,10 @@ export default {
           icon: 'mdi-database-plus',
           title: 'menuCrudStation',
           to: '/stations'
-        },
-        {
-          icon: 'mdi-home-map-marker',
-          title: 'menuHome',
-          to: '/'
-        },
+        }
       ],
       miniVariant: false,
       right: true,
-      rightDrawer: false,
       title: "Rail Wars Trains APP",
 
     }
