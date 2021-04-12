@@ -69,15 +69,15 @@ export default {
           to: '/'
         },
         {
+          icon: 'mdi-database-plus',
+          title: 'menuCrudStation',
+          to: '/stations'
+        },
+        {
           icon: 'mdi-transit-connection-variant',
           title: 'menuApi',
           to: '/api'
         },
-        {
-          icon: 'mdi-database-plus',
-          title: 'menuCrudStation',
-          to: '/stations'
-        }
       ],
       miniVariant: false,
       right: true,
