@@ -86,6 +86,8 @@ const messages = {
     apiButtonsHeader : 'Partie de l\'api que nous avons utilisé',
     exempleJourneysButton : 'EXEMPLE DE TRAJET',
     exempleStationButton : 'EXEMPLE DE STATION & LIGNES',
+    massInsertionTitle : 'Insertion de masse en JSON',
+    createAllStationsButton: 'Créer les stations',
   },
   en: {
     createStationTitle : 'Creating a new station',
@@ -125,6 +127,8 @@ const messages = {
     apiButtonsHeader : 'Part of the API we used',
     exempleJourneysButton : 'EXAMPLE OF A JOURNEY',
     exempleStationButton : 'EXAMPLE OF STATION & LINES',
+    massInsertionTitle : 'Bulk insert with JSON',
+    createAllStationsButton: 'Create all stations',
   },
   es: {
     createStationTitle : 'Creando una nueva estación',
@@ -164,6 +168,8 @@ const messages = {
     apiButtonsHeader : 'Parte de la API que usamos',
     exempleJourneysButton : 'EJEMPLO DE VIAJE',
     exempleStationButton : 'EJEMPLO DE ESTACIÓN Y LÍNEAS',
+    massInsertionTitle : 'Inserción masiva en JSON',
+    createAllStationsButton: 'Crear estaciones',
   },
   it: {
     createStationTitle : 'Creazione di una nuova stazione',
@@ -203,6 +209,8 @@ const messages = {
     apiButtonsHeader : 'Parte dell\'API che abbiamo utilizzato',
     exempleJourneysButton : 'ESEMPIO DI VIAGGIO',
     exempleStationButton : 'ESEMPIO DI STAZIONE E LINEE',
+    massInsertionTitle : 'Inserimento di massa in JSON',
+    createAllStationsButton: 'Crea stazioni',
   },
   de: {
     createStationTitle : 'Neue Station erstellen',
@@ -242,6 +250,8 @@ const messages = {
     apiButtonsHeader : 'Ein Teil der von uns verwendeten API',
     exempleJourneysButton : 'BEISPIEL EINER REISE',
     exempleStationButton : 'BEISPIEL FÜR STATION & LINIEN',
+    massInsertionTitle : 'Masseneinfügung in JSON',
+    createAllStationsButton: 'Erstellen Sie Stationen',
   },
 }
 

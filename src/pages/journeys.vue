@@ -1,0 +1,79 @@
+<template>
+  <div id="main">
+    <v-form ref="form">
+      <v-card style="background-color: white; margin-top: 2%;" >
+        <v-textarea
+          filled
+          name="input-7-4"
+          label="Insert JSON"
+          v-model="jsonValue"
+        ></v-textarea>
+          
+        
+      </v-card>
+      <div style="background-color: white;">
+        <v-row justify="center">
+          <v-btn color="#ffe6cc" justify="center" class="mt-4" @click="callApi" style="color:#60378c">{{$t('createAllStationsButton')}}</v-btn>
+        </v-row>
+      </div>
+    </v-form>
+    </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  name: "createStation",
+  data () {
+    return{
+      typeForm : 'create',
+      jsonValue: '[{ "name": "test5", "longitude": 2.0, "latitude": 2.0  }, { "name": "test6", "longitude": 4.0, "latitude": 4.0 }]'
+    }
+  },
+  methods: {
+    /**
+     * call api with given json
+     */
+    callApi: function() {
+      axios.post(
+                'https://projet-web-trains.herokuapp.com/train-stations/all/'+this.$i18n.locale, 
+                this.jsonValue,
+                {
+                    headers: { 
+                        'Content-Type' : 'application/json' 
+                    }
+                }
+        ).then((response) => {
+            console.log(response);
+            location.reload(true);
+        });
+    },
+  }
+}
+</script>
+
+<style>
+
+
+:root{
+  --main-purple-color: #60378c;
+}
+.stationsPageTitle{
+  font-size: 25px;
+  color:var(--main-purple-color);
+}
+
+.v-application .blue--text.text--darken-2 {
+  color: var(--main-purple-color) !important;
+  caret-color: var(--main-purple-color) !important;
+}
+
+#actionMenu{
+  padding : 1rem;
+  margin: 1rem;
+}
+
+
+
+</style>

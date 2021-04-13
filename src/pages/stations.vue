@@ -3,14 +3,20 @@
     <div style=" margin: 2% 2% 2% 2%">
       <v-row justify="center" style="margin-top:5%">
         <v-col cols="12" sm="12" md="8" lg="6" xl="6" justify="center">
+          
           <v-card width="800" elevation="2" outlined shaped tile>
+            <v-checkbox
+              v-model="checkboxJSON"
+              label="JSON"
+            ></v-checkbox>
             <v-row justify="center" style="margin-top:1%">
                <v-toolbar style="width: 50%" color="#e8e8e8" dark flat>
-                  <v-card-title v-if="typeForm == 'create'" class="stationsPageTitle">{{$t('createStation')}}</v-card-title>
-                  <v-card-title v-if="typeForm == 'update'" class="stationsPageTitle">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
+                  <v-card-title v-if="checkboxJSON" class="stationsPageTitle">{{$t('massInsertionTitle')}}</v-card-title>
+                  <v-card-title v-else-if="typeForm == 'create'" class="stationsPageTitle">{{$t('createStation')}}</v-card-title>
+                  <v-card-title v-else-if="typeForm == 'update'" class="stationsPageTitle">{{$t('modifyStation')+ this.newStation.name}}</v-card-title>
                </v-toolbar>
             </v-row>
-            <v-form ref="form" class="mb-4">
+            <v-form ref="form" class="mb-4" v-if="!checkboxJSON">
               <v-card style="padding : 1rem; margin: 1rem">
                 <v-text-field v-model="newStation.name" :label="$t('nameOfStation')" color="#60378c" required></v-text-field>
                 <v-text-field v-model="newStation.longitude" type="number" :label="$t('longitude')" color="#60378c" required></v-text-field>
@@ -27,13 +33,17 @@
                 <toast ref="toast"></toast>
               </div>
             </v-form>
+
+    
+            <!--show json form-->
+            <journeys v-else>
+            </journeys>
           </v-card>
         </v-col>
       </v-row>
       <toast ref="toastDatatable"></toast>
       <v-row justify="center" style="margin-bottom: 2%">
         <v-col cols="12" sm="12" md="8" lg="6" xl="6" justify="center">
-          
           <datatable :items="stationsList" :headers="$t('headersStationCrud')"
                      v-on:edit="editStation" v-on:delete="deleteStation" ></datatable>
         </v-col>
@@ -46,15 +56,17 @@
 import axios from 'axios'
 import toast from '../components/toast.vue'
 import datatable from '../components/datatable.vue'
+import journeys from '../pages/journeys.vue'
 
 export default {
-  components: { toast, datatable },
+  components: { toast, datatable, journeys },
   name: "createStation",
   data () {
     return{
       newStation : { name: '', longitude: 0.0, latitude: 0.0  },
       typeForm : 'create',
-      stationsList: []
+      stationsList: [],
+      checkboxJSON: false
     }
   },
   mounted () {
