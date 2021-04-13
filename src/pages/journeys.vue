@@ -1,22 +1,24 @@
 <template>
   <div id="main">
-    <v-form ref="form">
+    <v-form ref="form" style="margin-bottom:2%">
       <v-card style="background-color: white; margin-top: 2%;" >
         <v-textarea
           filled
           name="input-7-4"
           label="Insert JSON"
           v-model="jsonValue"
+          color="#60378c"
         ></v-textarea>
-          
-        
-      </v-card>
-      <div style="background-color: white;">
-        <v-row justify="center">
-          <v-btn color="#ffe6cc" justify="center" class="mt-4" @click="callApi" style="color:#60378c">{{$t('createAllStationsButton')}}</v-btn>
+
+
+        <v-row justify="center" style="background-color: white; margin-left: 5%; margin-right: 5%">
+          <v-btn color="#ffe6cc" justify="center" class="mt-4" @click="callApi" style="color:#60378c; margin-top:2%; margin-bottom:3%;">{{$t('createAllStationsButton')}}</v-btn>
         </v-row>
-      </div>
+
+      </v-card>
+
     </v-form>
+
     </div>
 </template>
 

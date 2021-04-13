@@ -8,6 +8,7 @@
             <v-checkbox
               v-model="checkboxJSON"
               label="JSON"
+              color="#60378c"
             ></v-checkbox>
             <v-row justify="center" style="margin-top:1%">
                <v-toolbar style="width: 50%" color="#e8e8e8" dark flat>
