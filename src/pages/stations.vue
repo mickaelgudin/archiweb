@@ -37,8 +37,8 @@
 
     
             <!--show json form-->
-            <journeys v-else>
-            </journeys>
+            <stations-bulk v-else v-on:refresh="refreshStations">
+            </stations-bulk>
           </v-card>
         </v-col>
       </v-row>
@@ -57,10 +57,10 @@
 import axios from 'axios'
 import toast from '../components/toast.vue'
 import datatable from '../components/datatable.vue'
-import journeys from '../pages/journeys.vue'
+import stationsBulk from './stations-bulk.vue'
 
 export default {
-  components: { toast, datatable, journeys },
+  components: { toast, datatable, stationsBulk },
   name: "createStation",
   data () {
     return{
@@ -71,12 +71,18 @@ export default {
     }
   },
   mounted () {
-    axios
-        .get('https://projet-web-trains.herokuapp.com/train-stations')
-        .then(response => (this.stationsList = response.data))
-
+    this.refreshStations();
   },
   methods: {
+    /**
+      Refresh stations list for datatable
+    */
+    refreshStations: function() {
+      axios
+        .get('https://projet-web-trains.herokuapp.com/train-stations')
+        .then(response => (this.stationsList = response.data))
+    },
+
     /**
      * defining a method to edit station in table
      * @param  {Object} item station to be modify

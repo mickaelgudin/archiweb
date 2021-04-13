@@ -26,7 +26,7 @@
 import axios from 'axios'
 
 export default {
-  name: "createStation",
+  name: "stationsBulk",
   data () {
     return{
       typeForm : 'create',
@@ -48,7 +48,7 @@ export default {
                 }
         ).then((response) => {
             console.log(response);
-            location.reload(true);
+             this.$emit('refresh');
         });
     },
   }
