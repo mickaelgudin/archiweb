@@ -1,8 +1,7 @@
 # Rail Wars Trains APP
 
-This project is the front end of the projects rail wars trains. It uses this repo as back end : https://github.com/mickaelgudin/spring-boot-h2-crud
-The support of 5 language are supported(also by the back end). 
-Here is the currently supported language : 
+This project is the front end of the project rail wars trains. It uses this repo as a back end : https://github.com/mickaelgudin/spring-boot-h2-crud
+The currently supported languages are : 
 - French
 - English
 - German
@@ -13,11 +12,12 @@ Here is the currently supported language :
 - VueJS 2
 - Vuetify
 - Vue i18n
+- Heroku
 
 ## Website sections
 - **Home :** see prices in the map by double clicking on a station in the map & search for journeys between two stations(with criterias of date & hour)
 - **Stations :** crud for stations
-- **Api :** links to the api on which we based our back end & redirecting to the swagger of our back end(deployed in heroku)
+- **Api :** links to the api on which we based our back end & redirecting to the swagger ui of the back end(also deployed with heroku)
 
 ![image](https://user-images.githubusercontent.com/39730173/114470215-d1d74580-9bee-11eb-949d-801efd6b2644.png)
 
