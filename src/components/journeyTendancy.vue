@@ -67,7 +67,7 @@ import toast from '../components/toast.vue'
 
             if(idStationDepart && idStationArrival){
                 axios
-                .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
+                .get('https://spring-boot-h2-crud.onrender.com/journeys/'+this.$i18n.locale+'/tendancy?id-from='+idStationDepart+'&id-to='+idStationArrival)
                 .then(response => {
                     let data = response.data;
 

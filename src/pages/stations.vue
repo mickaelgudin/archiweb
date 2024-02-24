@@ -79,7 +79,7 @@ export default {
     */
     refreshStations: function() {
       axios
-        .get('https://projet-web-trains.herokuapp.com/train-stations')
+        .get('https://spring-boot-h2-crud.onrender.com/train-stations')
         .then(response => (this.stationsList = response.data))
     },
 
@@ -164,7 +164,7 @@ export default {
     */
     createStations: function() {
         axios.post(
-                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale, 
+                'https://spring-boot-h2-crud.onrender.com/train-stations/'+this.$i18n.locale, 
                 JSON.stringify(this.newStation),
                 {
                     headers: { 
@@ -184,7 +184,7 @@ export default {
     */
     deleteStationById: function(id) {
         axios.delete(
-                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
+                'https://spring-boot-h2-crud.onrender.com/train-stations/'+this.$i18n.locale+'/'+ id, 
                 {
                     headers: { 
                         'Content-Type' : 'application/json' 
@@ -210,7 +210,7 @@ export default {
     */
     updateStationById: function(id) {
         axios.put(
-                'https://projet-web-trains.herokuapp.com/train-stations/'+this.$i18n.locale+'/'+ id, 
+                'https://spring-boot-h2-crud.onrender.com/train-stations/'+this.$i18n.locale+'/'+ id, 
                 JSON.stringify(this.newStation),
                 {
                     headers: { 

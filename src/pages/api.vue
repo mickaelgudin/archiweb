@@ -5,12 +5,12 @@
             <v-toolbar-title class="titlesApi">{{ $t('apiTitle') }}</v-toolbar-title>
         </v-toolbar>
 
-        <v-btn id="swaggerButton" rounded color="#60378c" dark href="https://projet-web-trains.herokuapp.com" target="_blank">
+        <v-btn id="swaggerButton" rounded color="#60378c" dark href="https://spring-boot-h2-crud.onrender.com" target="_blank">
             {{ $t('buttonToSwagger') }}
         </v-btn>
 
         <v-toolbar id="titleSources" color="#e8e8e8" dark flat>
-            <v-toolbar-title class="titlesApi">Nos sources d'inspirations</v-toolbar-title>
+            <v-toolbar-title class="titlesApi">API</v-toolbar-title>
         </v-toolbar>
 
         <v-row>

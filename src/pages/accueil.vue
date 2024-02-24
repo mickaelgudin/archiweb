@@ -170,7 +170,7 @@ export default {
     this.$nextTick(()=> this.doneGettingLoadingData = false)
 
     axios
-        .get('https://projet-web-trains.herokuapp.com/train-stations')
+        .get('https://spring-boot-h2-crud.onrender.com/train-stations')
         .then(response => (this.recupData(response.data)))
   },
 
@@ -367,7 +367,7 @@ export default {
     displayReachableStations : function(item) {
       if(!this.hasSearch && this.flagReachableStations){
         axios
-            .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'/'+'average?id-from='+item.id)
+            .get('https://spring-boot-h2-crud.onrender.com/journeys/'+this.$i18n.locale+'/'+'average?id-from='+item.id)
             .then(response => this.loadReachableStations(response.data , item))
       } else {
         this.flagReachableStations = true;

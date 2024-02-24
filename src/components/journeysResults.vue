@@ -65,7 +65,7 @@ import toast from '../components/toast.vue'
             this.showToast = false;
             if(idStationFrom && idStationTo) {
                 axios
-                .get('https://projet-web-trains.herokuapp.com/journeys/'+this.$i18n.locale+'?id-from='+idStationFrom+'&id-to='+idStationTo)
+                .get('https://spring-boot-h2-crud.onrender.com/journeys/'+this.$i18n.locale+'?id-from='+idStationFrom+'&id-to='+idStationTo)
                 .then(response => (this.filterJourneys(response.data, fromTime, fromTimeType, selectedDate) ) )
                 .catch(err => {
                   if (err.response.status === 400) {
